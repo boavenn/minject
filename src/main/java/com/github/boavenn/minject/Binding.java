@@ -5,6 +5,6 @@ import java.lang.annotation.Annotation;
 
 public interface Binding<T> {
     ClassKey<T> getClassKey();
-    Provider<T> getProvider();
+    Provider<? extends T> getProvider();
     Class<? extends Annotation> getScope();
 }

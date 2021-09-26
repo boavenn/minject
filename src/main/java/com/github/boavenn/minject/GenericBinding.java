@@ -11,11 +11,11 @@ import java.lang.annotation.Annotation;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class GenericBinding<T> implements Binding<T> {
     private final ClassKey<T> classKey;
-    private final Provider<T> provider;
+    private final Provider<? extends T> provider;
     private final Class<? extends Annotation> scope;
 
     public static <T> GenericBinding<T> of(ClassKey<T> classKey,
-                                        Provider<T> provider,
+                                        Provider<? extends T> provider,
                                         Class<? extends Annotation> scope) {
         return new GenericBinding<>(classKey, provider, scope);
     }

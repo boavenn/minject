@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class GenericBindingScopeBuilder<T> implements BindingScopeBuilder {
     private final ClassKey<T> classKey;
-    private final Provider<T> provider;
-    private final Consumer<Binding<?>> bindingConsumer;
+    private final Provider<? extends T> provider;
+    private final Consumer<Binding<? extends T>> bindingConsumer;
 
     @Override
     public void in(Class<? extends Annotation> scope) {

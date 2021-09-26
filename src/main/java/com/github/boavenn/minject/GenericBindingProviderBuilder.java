@@ -9,17 +9,17 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class GenericBindingProviderBuilder<T> implements BindingProviderBuilder<T> {
     private final ClassKey<T> classKey;
-    private final Consumer<Binding<?>> bindingConsumer;
+    private final Consumer<Binding<? extends T>> bindingConsumer;
     private final ClassInstantiator classInstantiator;
 
     @Override
     public <U extends T> BindingScopeBuilder to(Class<U> cls) {
-        Provider<T> provider = () -> classInstantiator.instantiateObjectOf(cls);
+        Provider<U> provider = () -> classInstantiator.instantiateObjectOf(cls);
         return new GenericBindingScopeBuilder<>(classKey, provider, bindingConsumer);
     }
 
     @Override
-    public BindingScopeBuilder toProvider(Provider<T> provider) {
+    public <U extends T> BindingScopeBuilder toProvider(Provider<U> provider) {
         return new GenericBindingScopeBuilder<>(classKey, provider, bindingConsumer);
     }
 
