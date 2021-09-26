@@ -8,33 +8,29 @@ import lombok.RequiredArgsConstructor;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Arrays;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
 @EqualsAndHashCode
 public class ClassKey<T> {
-    private final Class<T> identifiedClass;
-    private final String name;
-    private final Annotation qualifier;
+    private final TypeLiteral<T> typeLiteral;
+    @Getter private final String name;
+    @Getter private final Annotation qualifier;
 
     public static <T> ClassKey<T> of(Class<T> cls) {
-        return new ClassKey<>(cls, null, null);
+        return new ClassKey<>(TypeLiteral.of(cls), null, null);
     }
 
     public static <T> ClassKey<T> of(Class<T> cls, String name) {
-        return new ClassKey<>(cls, name, null);
+        return new ClassKey<>(TypeLiteral.of(cls), name, null);
     }
 
     public static <T> ClassKey<T> of(Class<T> cls, Annotation qualifier) {
         if (qualifier instanceof Named namedQualifier) {
-            return new ClassKey<>(cls, namedQualifier.value(), null);
+            return new ClassKey<>(TypeLiteral.of(cls), namedQualifier.value(), null);
         }
-        return new ClassKey<>(cls, null, qualifier);
+        return new ClassKey<>(TypeLiteral.of(cls), null, qualifier);
     }
 
     public static <T> ClassKey<T> from(Class<T> cls) {
@@ -69,5 +65,9 @@ public class ClassKey<T> {
                 .filter(annotation -> annotation.annotationType().isAnnotationPresent(Qualifier.class))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public Class<T> getIdentifiedClass() {
+        return typeLiteral.getRawType();
     }
 }
