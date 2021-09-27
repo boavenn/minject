@@ -14,7 +14,7 @@ public class SingletonScopeHandler implements ScopeHandler {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Provider<T> scopeProvider(ClassKey<T> classKey, Provider<T> unscopedProvider) {
+    public <T> Provider<? extends T> scopeProvider(ClassKey<T> classKey, Provider<? extends T> unscopedProvider) {
         if (!singletons.containsKey(classKey)) {
             T instance = unscopedProvider.get();
             singletons.put(classKey, instance);
