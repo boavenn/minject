@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class GenericBindingProviderBuilder<T> implements BindingProviderBuilder<T> {
     private final ClassKey<T> classKey;
-    private final Consumer<Binding<? extends T>> bindingConsumer;
+    private final Consumer<Binding<? super T>> bindingConsumer;
     private final ClassInstantiator classInstantiator;
 
     @Override
