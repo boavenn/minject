@@ -38,7 +38,7 @@ class GenericInjectableConstructorResolverSpec extends Specification {
 
         then:
         InjectionPointException ex = thrown()
-        ex.getMessage() == InjectionPointException.MULTIPLE_CONSTR_FOUND_MSG
+        ex.getMessage() == InjectionPointException.multipleAnnotatedConstructorsFound().getMessage()
     }
 
     def "findInjectableConstructorIn() WHEN given class has multiple unannotated constructors SHOULD throw an exception"() {
@@ -47,6 +47,6 @@ class GenericInjectableConstructorResolverSpec extends Specification {
 
         then:
         InjectionPointException ex = thrown()
-        ex.getMessage() == InjectionPointException.CONSTR_NOT_FOUND_MSG
+        ex.getMessage() == InjectionPointException.noInjectableConstructorFound().getMessage()
     }
 }

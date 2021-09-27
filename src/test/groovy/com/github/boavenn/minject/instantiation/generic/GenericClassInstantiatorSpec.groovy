@@ -83,7 +83,7 @@ class GenericClassInstantiatorSpec extends Specification {
 
         then:
         InjectionException ex = thrown()
-        ex.getMessage() == InjectionException.INJECTABLE_CONSTRUCTOR_INVOCATION_MSG
+        ex.getMessage() == InjectionException.injectableConstructorInvocation(null).getMessage()
     }
 
     def "instantiateObjectOf() WHEN field injection is impossible for whatever reason SHOULD throw an exception"() {
@@ -100,7 +100,7 @@ class GenericClassInstantiatorSpec extends Specification {
 
         then:
         InjectionException ex = thrown()
-        ex.getMessage() == InjectionException.INJECTABLE_FIELD_SET_MSG
+        ex.getMessage() == InjectionException.injectableFieldValueSet(null).getMessage()
     }
 
     def "instantiateObjectOf() WHEN method injection is impossible for whatever reason SHOULD throw an exception"() {
@@ -119,6 +119,6 @@ class GenericClassInstantiatorSpec extends Specification {
 
         then:
         InjectionException ex = thrown()
-        ex.getMessage() == InjectionException.INJECTABLE_METHOD_INVOCATION_MSG
+        ex.getMessage() == InjectionException.injectableMethodInvocation(null).getMessage()
     }
 }

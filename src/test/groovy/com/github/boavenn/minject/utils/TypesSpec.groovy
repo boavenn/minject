@@ -91,7 +91,7 @@ class TypesSpec extends Specification {
 
         then:
         TypeException ex = thrown()
-        ex.getMessage() == TypeException.NESTED_TYPE_OF_NONPARAMETERIZED_MSG
+        ex.getMessage() == TypeException.nestedTypeOfNonparameterizedType().getMessage()
     }
 
     private static def assertThatTypeIsParameterized(Type type, Class<?> rawType, Predicate<Type[]> typeArgsCondition) {

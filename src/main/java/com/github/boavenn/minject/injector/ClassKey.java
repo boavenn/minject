@@ -65,7 +65,7 @@ public class ClassKey<T> {
         var returnType = method.getGenericReturnType();
 
         if (returnType.equals(Void.TYPE)) {
-            throw ClassKeyCreationException.voidMethod();
+            throw ClassKeyCreationException.methodOfVoidReturnType();
         }
 
         return from(returnType, method);

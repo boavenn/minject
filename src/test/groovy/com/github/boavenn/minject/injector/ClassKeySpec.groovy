@@ -226,7 +226,7 @@ class ClassKeySpec extends Specification {
 
         then:
         ClassKeyCreationException ex = thrown()
-        ex.getMessage() == ClassKeyCreationException.VOID_METHOD_MSG
+        ex.getMessage() == ClassKeyCreationException.methodOfVoidReturnType().getMessage()
     }
 
     def "from() WHEN given method with named qualifier SHOULD return correct key"() {

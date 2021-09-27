@@ -63,7 +63,7 @@ public class GenericClassInstantiator implements ClassInstantiator {
             try {
                 field.set(instance, resolveKey(fieldKey));
             } catch (Exception e) {
-                throw InjectionException.injectableFieldSet(e);
+                throw InjectionException.injectableFieldValueSet(e);
             }
         });
     }
