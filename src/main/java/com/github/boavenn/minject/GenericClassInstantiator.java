@@ -53,7 +53,7 @@ public class GenericClassInstantiator implements ClassInstantiator {
             field.setAccessible(true);
             var fieldKey = ClassKey.from(field);
             try {
-                field.set(instance, injector.getInstanceOf(fieldKey));
+                field.set(instance, resolveKey(fieldKey));
             } catch (Exception e) {
                 throw InjectionException.injectableFieldSet(e);
             }
@@ -81,7 +81,15 @@ public class GenericClassInstantiator implements ClassInstantiator {
 
     private Object[] resolveKeys(List<? extends ClassKey<?>> classKeys) {
         return classKeys.stream()
-                        .map(injector::getInstanceOf)
+                        .map(this::resolveKey)
                         .toArray(Object[]::new);
+    }
+
+    private Object resolveKey(ClassKey<?> classKey) {
+        if (classKey.isProviderKey()) {
+            var innerType = classKey.getTypeLiteral().getInnerType();
+            return injector.getProviderOf(classKey.with(innerType));
+        }
+        return injector.getInstanceOf(classKey);
     }
 }

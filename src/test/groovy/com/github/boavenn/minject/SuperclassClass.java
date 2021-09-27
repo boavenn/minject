@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 @Getter
 class SuperclassClass {
@@ -16,6 +17,11 @@ class SuperclassClass {
     @Inject
     @Named(fieldName)
     private String superclassField;
+
+    @Inject
+    @Named(fieldName)
+    private Provider<String> superclassFieldProvider;
+
     private String superclassMethodParam = "";
 
     @Inject

@@ -2,6 +2,8 @@ package com.github.boavenn.minject
 
 import spock.lang.Specification
 
+import javax.inject.Provider
+
 class GenericClassInstantiatorSpec extends Specification {
     def injector = Mock(Injector)
     def instantiator = GenericClassInstantiator.using(injector).build()
@@ -9,11 +11,13 @@ class GenericClassInstantiatorSpec extends Specification {
     def "instantiateObjectOf() WHEN given class has no superclass SHOULD instantiate it properly"() {
         given:
         def fieldStringInstance = "superclassFieldString"
+        Provider<String> fieldStringInstanceProvider = () -> fieldStringInstance
         def constructorStringInstance = "superclassConstructorParamString"
         def methodParamStringInstance = "superclassMethodParamString"
 
         and:
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.fieldName)) >> fieldStringInstance
+        injector.getProviderOf(ClassKey.of(String, SuperclassClass.fieldName)) >> fieldStringInstanceProvider
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.constructorParamName)) >> constructorStringInstance
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.methodParamName)) >> methodParamStringInstance
 
@@ -22,6 +26,7 @@ class GenericClassInstantiatorSpec extends Specification {
 
         then:
         instance.getSuperclassField() == fieldStringInstance
+        instance.getSuperclassFieldProvider().get() == fieldStringInstance
         instance.getSuperclassConstructorParam() == constructorStringInstance
         instance.getSuperclassMethodParam() == methodParamStringInstance
     }
@@ -29,19 +34,23 @@ class GenericClassInstantiatorSpec extends Specification {
     def "instantiateObjectOf() WHEN given class has superclass SHOULD instantiate it properly"() {
         given:
         def superclassFieldStringInstance = "superclassFieldString"
+        Provider<String> superclassFieldStringInstanceProvider = () -> superclassFieldStringInstance
         def superclassConstructorStringInstance = "superclassConstructorParamString"
         def superclassMethodParamStringInstance = "superclassMethodParamString"
 
         def subclassFieldStringInstance = "subclassFieldString"
+        Provider<String> subclassFieldStringInstanceProvider = () -> subclassFieldStringInstance
         def subclassConstructorStringInstance = "subclassConstructorParamString"
         def subclassMethodParamStringInstance = "subclassMethodParamString"
 
         and:
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.fieldName)) >> superclassFieldStringInstance
+        injector.getProviderOf(ClassKey.of(String, SuperclassClass.fieldName)) >> superclassFieldStringInstanceProvider
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.constructorParamName)) >> superclassConstructorStringInstance
         injector.getInstanceOf(ClassKey.of(String, SuperclassClass.methodParamName)) >> superclassMethodParamStringInstance
 
         injector.getInstanceOf(ClassKey.of(String, SubclassClass.fieldName)) >> subclassFieldStringInstance
+        injector.getProviderOf(ClassKey.of(String, SubclassClass.fieldName)) >> subclassFieldStringInstanceProvider
         injector.getInstanceOf(ClassKey.of(String, SubclassClass.constructorParamName)) >> subclassConstructorStringInstance
         injector.getInstanceOf(ClassKey.of(String, SubclassClass.methodParamName)) >> subclassMethodParamStringInstance
 
@@ -50,9 +59,12 @@ class GenericClassInstantiatorSpec extends Specification {
 
         then:
         instance.getSuperclassField() == superclassFieldStringInstance
+        instance.getSuperclassFieldProvider().get() == superclassFieldStringInstance
         instance.getSuperclassConstructorParam() == superclassConstructorStringInstance
         instance.getSuperclassMethodParam() == superclassMethodParamStringInstance
+
         instance.getSubclassField() == subclassFieldStringInstance
+        instance.getSubclassFieldProvider().get() == subclassFieldStringInstance
         instance.getSubclassConstructorParam() == subclassConstructorStringInstance
         instance.getSubclassMethodParam() == subclassMethodParamStringInstance
     }
