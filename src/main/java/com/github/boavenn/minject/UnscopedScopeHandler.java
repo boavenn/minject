@@ -8,6 +8,6 @@ import javax.inject.Provider;
 public class UnscopedScopeHandler implements ScopeHandler {
     @Override
     public <T> Provider<T> scopeProvider(ClassKey<T> classKey, Provider<T> unscopedProvider) {
-        return () -> unscopedProvider.get();
+        return unscopedProvider;
     }
 }
