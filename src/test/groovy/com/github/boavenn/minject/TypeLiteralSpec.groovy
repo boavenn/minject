@@ -114,41 +114,6 @@ class TypeLiteralSpec extends Specification {
         providerTypeLiteral.hashCode() == expectedTypeLiteral.hashCode()
     }
 
-    def "getInnerType() WHEN called on a type literal of parameterized type with single type arg SHOULD return this inner type literal"() {
-        given:
-        def typeLiteral = new TypeLiteral<Provider<List<String>>>() {}
-
-        when:
-        def innerTypeLiteral = typeLiteral.getInnerType()
-
-        then:
-        innerTypeLiteral.getRawType() == List
-        assertThatTypeIsParameterized(innerTypeLiteral.getType(), List, typeArgs -> typeArgs == [String] as Type[])
-        innerTypeLiteral == new TypeLiteral<List<String>>() {}
-    }
-
-    def "getInnerType() WHEN called on a type literal of parameterized type with multiple type args SHOULD throw an exception"() {
-        given:
-        def typeLiteral = new TypeLiteral<Map<Integer, String>>() {}
-
-        when:
-        typeLiteral.getInnerType()
-
-        then:
-        thrown(RuntimeException)
-    }
-
-    def "getInnerType() WHEN called on a type literal of nonparameterized type SHOULD throw an exception"() {
-        given:
-        def typeLiteral = new TypeLiteral<String>() {}
-
-        when:
-        typeLiteral.getInnerType()
-
-        then:
-        thrown(RuntimeException)
-    }
-
     private static def assertThatTypeIsParameterized(Type type, Class<?> rawType, Predicate<Type[]> typeArgsCondition) {
         type instanceof ParameterizedType
                 && type.getRawType() == rawType

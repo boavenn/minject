@@ -87,8 +87,9 @@ public class GenericClassInstantiator implements ClassInstantiator {
 
     private Object resolveKey(ClassKey<?> classKey) {
         if (classKey.isProviderKey()) {
-            var innerType = classKey.getTypeLiteral().getInnerType();
-            return injector.getProviderOf(classKey.with(innerType));
+            var nestedTypeLiterals = Types.getTypeLiteralsOfNestedTypesIn(classKey.getTypeLiteral());
+            var typeToProvide = nestedTypeLiterals.get(0);
+            return injector.getProviderOf(classKey.with(typeToProvide));
         }
         return injector.getInstanceOf(classKey);
     }

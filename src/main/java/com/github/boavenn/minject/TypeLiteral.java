@@ -9,6 +9,7 @@ import javax.inject.Provider;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -19,14 +20,24 @@ public class TypeLiteral<T> {
 
     @SuppressWarnings("unchecked")
     protected TypeLiteral() {
-        this.type = getSuperclassTypeOf(getClass());
-        this.rawType = (Class<T>) getRawTypeOf(type);
+        // Returns provided type literal (i.e. type <T> provided in between angle brackets
+        // when creating anonymous inner class)
+        this.type = extractTypeInfoFrom(getClass());
+        this.rawType = (Class<T>) Types.getRawTypeOf(type);
+    }
+
+    private static Type extractTypeInfoFrom(Class<?> subclass) {
+        List<Type> types = Types.getSuperclassTypesOf(subclass);
+        if (types.isEmpty()) {
+            throw TypeException.missingTypeParameter();
+        }
+        return types.get(0);
     }
 
     @SuppressWarnings("unchecked")
     private TypeLiteral(Type type) {
         this.type = type;
-        this.rawType = (Class<T>) getRawTypeOf(type);
+        this.rawType = (Class<T>) Types.getRawTypeOf(type);
     }
 
     public static <T> TypeLiteral<T> of(Class<T> cls) {
@@ -35,36 +46,6 @@ public class TypeLiteral<T> {
 
     public static TypeLiteral<?> of(Type type) {
         return new TypeLiteral<>(type);
-    }
-
-    private static Class<?> getRawTypeOf(Type type) {
-        if (type instanceof Class<?> classType) {
-            return classType;
-        } else if (type instanceof ParameterizedType parameterizedType) {
-            return (Class<?>) parameterizedType.getRawType();
-        }
-        throw new IllegalArgumentException("Couldn't get raw type of type " + type.getTypeName());
-    }
-
-    private static Type getSuperclassTypeOf(Class<?> subclass) {
-        Type superclassType = subclass.getGenericSuperclass();
-        if (superclassType instanceof ParameterizedType parameterizedSuperclassType) {
-            // Returns provided type literal (i.e. type <T> provided in between angle brackets)
-            return parameterizedSuperclassType.getActualTypeArguments()[0];
-        }
-        throw new RuntimeException("Given class is missing type parameter");
-    }
-
-    public TypeLiteral<?> getInnerType() {
-        if (type instanceof ParameterizedType parameterizedType) {
-            var typeArgs = parameterizedType.getActualTypeArguments();
-            if (typeArgs.length == 1) {
-                var innerType = typeArgs[0];
-                return TypeLiteral.of(innerType);
-            }
-            throw new RuntimeException("Couldn't get inner type from parameterized type with multiple type args");
-        }
-        throw new RuntimeException("Couldn't get inner type of nonparameterized type");
     }
 
     @SuppressWarnings("unchecked")
