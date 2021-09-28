@@ -9,10 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class GenericClassInstantiator implements ClassInstantiator {
@@ -22,13 +19,23 @@ public class GenericClassInstantiator implements ClassInstantiator {
     private final InjectableMethodsResolver methodsResolver;
     private final OverriddenMethodsStrategy overriddenMethodsStrategy;
 
+    private final Set<Class<?>> classesInCreation = new HashSet<>();
+
     public static GenericClassInstantiatorBuilder using(Injector injector) {
         return new GenericClassInstantiatorBuilder(injector);
     }
 
     @Override
     public <T> T instantiateObjectOf(Class<T> cls) {
+        if (classesInCreation.contains(cls)) {
+            classesInCreation.clear();
+            throw InjectionException.circularDependencyFoundIn(cls);
+        }
+
+        classesInCreation.add(cls);
         T instance = instantiateObjectVia(constructorResolver.findInjectableConstructorIn(cls));
+        classesInCreation.remove(cls);
+
         injectMembers(cls, instance);
         return instance;
     }

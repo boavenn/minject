@@ -121,4 +121,18 @@ class GenericClassInstantiatorSpec extends Specification {
         InjectionException ex = thrown()
         ex.getMessage() == InjectionException.injectableMethodInvocation(null).getMessage()
     }
+
+    def "instantiateObjectOf() WHEN circular dependency is found SHOULD throw an exception"() {
+        given:
+        injector.getInstanceOf(ClassKey.of(CircularDependencyClassA)) >> { return instantiator.instantiateObjectOf(CircularDependencyClassA) }
+        injector.getInstanceOf(ClassKey.of(CircularDependencyClassB)) >> { return instantiator.instantiateObjectOf(CircularDependencyClassB) }
+        injector.getInstanceOf(ClassKey.of(CircularDependencyClassC)) >> { return instantiator.instantiateObjectOf(CircularDependencyClassC) }
+
+        when:
+        instantiator.instantiateObjectOf(CircularDependencyClassA)
+
+        then:
+        InjectionException ex = thrown()
+        ex.getMessage() == InjectionException.circularDependencyFoundIn(CircularDependencyClassA).getMessage()
+    }
 }
