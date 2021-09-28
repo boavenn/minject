@@ -3,7 +3,7 @@ package com.github.boavenn.minject.injector.generic;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.binding.generic.GenericBindingRegistry;
 import com.github.boavenn.minject.injector.Injector;
-import com.github.boavenn.minject.instantiaton.generic.GenericClassInstantiator;
+import com.github.boavenn.minject.instantiation.generic.GenericClassInstantiator;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.generic.GenericScopeRegistry;
 

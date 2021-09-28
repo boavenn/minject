@@ -1,4 +1,4 @@
-package com.github.boavenn.minject.instantiaton;
+package com.github.boavenn.minject.instantiation;
 
 import java.lang.reflect.Field;
 import java.util.List;

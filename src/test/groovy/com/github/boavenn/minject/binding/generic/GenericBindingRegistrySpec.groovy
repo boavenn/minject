@@ -4,7 +4,7 @@ package com.github.boavenn.minject.binding.generic
 import com.github.boavenn.minject.binding.generic.GenericBinding
 import com.github.boavenn.minject.binding.generic.GenericBindingRegistry
 import com.github.boavenn.minject.injector.ClassKey
-import com.github.boavenn.minject.instantiaton.ClassInstantiator
+import com.github.boavenn.minject.instantiation.ClassInstantiator
 import com.github.boavenn.minject.scope.Unscoped
 import spock.lang.Specification
 

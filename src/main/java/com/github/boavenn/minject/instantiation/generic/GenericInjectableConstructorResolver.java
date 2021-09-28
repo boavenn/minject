@@ -1,8 +1,7 @@
-package com.github.boavenn.minject.instantiaton.generic;
+package com.github.boavenn.minject.instantiation.generic;
 
 import com.github.boavenn.minject.exceptions.InjectionPointException;
-import com.github.boavenn.minject.instantiaton.InjectableConstructorResolver;
-import lombok.AccessLevel;
+import com.github.boavenn.minject.instantiation.InjectableConstructorResolver;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;

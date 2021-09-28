@@ -1,10 +1,10 @@
-package com.github.boavenn.minject.instantiaton.generic;
+package com.github.boavenn.minject.instantiation.generic;
 
 import com.github.boavenn.minject.injector.Injector;
-import com.github.boavenn.minject.instantiaton.InjectableConstructorResolver;
-import com.github.boavenn.minject.instantiaton.InjectableFieldsResolver;
-import com.github.boavenn.minject.instantiaton.InjectableMethodsResolver;
-import com.github.boavenn.minject.instantiaton.OverriddenMethodsStrategy;
+import com.github.boavenn.minject.instantiation.InjectableConstructorResolver;
+import com.github.boavenn.minject.instantiation.InjectableFieldsResolver;
+import com.github.boavenn.minject.instantiation.InjectableMethodsResolver;
+import com.github.boavenn.minject.instantiation.OverriddenMethodsStrategy;
 
 public class GenericClassInstantiatorBuilder {
     private final Injector injector;

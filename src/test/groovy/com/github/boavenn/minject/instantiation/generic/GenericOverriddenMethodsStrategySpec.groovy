@@ -1,7 +1,7 @@
 package com.github.boavenn.minject.instantiation.generic
 
 import com.github.boavenn.minject.instantiation.generic.somepackage.SubclassOverrideAnotherPackageClass
-import com.github.boavenn.minject.instantiaton.generic.GenericOverriddenMethodsStrategy
+import com.github.boavenn.minject.instantiation.generic.GenericOverriddenMethodsStrategy
 import spock.lang.Specification
 
 class GenericOverriddenMethodsStrategySpec extends Specification {

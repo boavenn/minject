@@ -1,11 +1,10 @@
 package com.github.boavenn.minject.binding.generic;
 
-import com.github.boavenn.minject.instantiaton.ClassInstantiator;
+import com.github.boavenn.minject.instantiation.ClassInstantiator;
 import com.github.boavenn.minject.binding.Binding;
 import com.github.boavenn.minject.binding.BindingProviderBuilder;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.injector.ClassKey;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;

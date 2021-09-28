@@ -1,6 +1,6 @@
-package com.github.boavenn.minject.instantiaton.generic;
+package com.github.boavenn.minject.instantiation.generic;
 
-import com.github.boavenn.minject.instantiaton.OverriddenMethodsStrategy;
+import com.github.boavenn.minject.instantiation.OverriddenMethodsStrategy;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
