@@ -4,18 +4,21 @@ import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.instantiaton.InjectableConstructorResolver;
 import com.github.boavenn.minject.instantiaton.InjectableFieldsResolver;
 import com.github.boavenn.minject.instantiaton.InjectableMethodsResolver;
+import com.github.boavenn.minject.instantiaton.OverriddenMethodsStrategy;
 
 public class GenericClassInstantiatorBuilder {
     private final Injector injector;
     private InjectableConstructorResolver injectableConstructorResolver;
     private InjectableFieldsResolver injectableFieldsResolver;
     private InjectableMethodsResolver injectableMethodsResolver;
+    private OverriddenMethodsStrategy overriddenMethodsStrategy;
 
     public GenericClassInstantiatorBuilder(Injector injector) {
         this.injector = injector;
         this.injectableConstructorResolver = GenericInjectableConstructorResolver.create();
         this.injectableFieldsResolver = GenericInjectableFieldsResolver.create();
         this.injectableMethodsResolver = GenericInjectableMethodsResolver.create();
+        this.overriddenMethodsStrategy = GenericOverriddenMethodsStrategy.create();
     }
 
     public GenericClassInstantiatorBuilder with(InjectableConstructorResolver injectableConstructorResolver) {
@@ -33,10 +36,16 @@ public class GenericClassInstantiatorBuilder {
         return this;
     }
 
+    public GenericClassInstantiatorBuilder with(OverriddenMethodsStrategy overriddenMethodsStrategy) {
+        this.overriddenMethodsStrategy = overriddenMethodsStrategy;
+        return this;
+    }
+
     public GenericClassInstantiator build() {
         return new GenericClassInstantiator(injector,
                                             injectableConstructorResolver,
                                             injectableFieldsResolver,
-                                            injectableMethodsResolver);
+                                            injectableMethodsResolver,
+                                            overriddenMethodsStrategy);
     }
 }

@@ -1,18 +1,17 @@
 package com.github.boavenn.minject.instantiaton.generic;
 
 import com.github.boavenn.minject.exceptions.InjectionException;
+import com.github.boavenn.minject.instantiaton.*;
 import com.github.boavenn.minject.utils.Types;
 import com.github.boavenn.minject.injector.ClassKey;
 import com.github.boavenn.minject.injector.Injector;
-import com.github.boavenn.minject.instantiaton.ClassInstantiator;
-import com.github.boavenn.minject.instantiaton.InjectableConstructorResolver;
-import com.github.boavenn.minject.instantiaton.InjectableFieldsResolver;
-import com.github.boavenn.minject.instantiaton.InjectableMethodsResolver;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -21,6 +20,7 @@ public class GenericClassInstantiator implements ClassInstantiator {
     private final InjectableConstructorResolver constructorResolver;
     private final InjectableFieldsResolver fieldsResolver;
     private final InjectableMethodsResolver methodsResolver;
+    private final OverriddenMethodsStrategy overriddenMethodsStrategy;
 
     public static GenericClassInstantiatorBuilder using(Injector injector) {
         return new GenericClassInstantiatorBuilder(injector);
@@ -45,16 +45,47 @@ public class GenericClassInstantiator implements ClassInstantiator {
     }
 
     private <T> void injectMembers(Class<? super T> cls, T instance) {
-        if (hasInjectableSuperclass(cls)) {
-            injectMembers(cls.getSuperclass(), instance);
+        var fieldsItr = allInjectableFieldsOf(cls).iterator();
+        var methodsItr = allInjectableMethodsOf(cls).iterator();
+
+        while (fieldsItr.hasNext() && methodsItr.hasNext()) {
+            injectFields(fieldsItr.next(), instance);
+            injectMethods(methodsItr.next(), instance);
         }
-        injectFields(fieldsResolver.findInjectableFieldsIn(cls), instance);
-        injectMethods(methodsResolver.findInjectableMethodsIn(cls), instance);
     }
 
-    private boolean hasInjectableSuperclass(Class<?> cls) {
+    private Deque<List<Field>> allInjectableFieldsOf(Class<?> cls) {
+        Deque<List<Field>> fields = new LinkedList<>();
+
+        fields.addFirst(fieldsResolver.findInjectableFieldsIn(cls));
+
         var superclass = cls.getSuperclass();
-        return superclass != null && !superclass.equals(Object.class);
+        while (isClassInjectable(superclass)) {
+            fields.addFirst(fieldsResolver.findInjectableFieldsIn(superclass));
+            superclass = superclass.getSuperclass();
+        }
+
+        return fields;
+    }
+
+    private Deque<List<Method>> allInjectableMethodsOf(Class<?> cls) {
+        Deque<List<Method>> methods = new LinkedList<>();
+
+        methods.addFirst(methodsResolver.findInjectableMethodsIn(cls));
+
+        var superclass = cls.getSuperclass();
+        while (isClassInjectable(superclass)) {
+            var superclassMethods = methodsResolver.findInjectableMethodsIn(superclass);
+            var subclassMethods = methods.getLast();
+            methods.addFirst(overriddenMethodsStrategy.removeOverriddenMethods(subclassMethods, superclassMethods));
+            superclass = superclass.getSuperclass();
+        }
+
+        return methods;
+    }
+
+    private boolean isClassInjectable(Class<?> cls) {
+        return cls != null && !cls.equals(Object.class);
     }
 
     private void injectFields(List<Field> fields, Object instance) {
