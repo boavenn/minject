@@ -12,14 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(staticName = "using")
 public class GenericBindingRegistry implements BindingRegistry {
     private final Map<ClassKey<?>, Binding<?>> bindings = new HashMap<>();
     private final ClassInstantiator classInstantiator;
-
-    public static GenericBindingRegistry using(ClassInstantiator classInstantiator) {
-        return new GenericBindingRegistry(classInstantiator);
-    }
 
     @Override
     public <T> BindingProviderBuilder<T> bind(ClassKey<T> classKey) {

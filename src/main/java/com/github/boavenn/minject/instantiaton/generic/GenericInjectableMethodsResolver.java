@@ -10,12 +10,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(staticName = "create")
 public class GenericInjectableMethodsResolver implements InjectableMethodsResolver {
-    public static GenericInjectableMethodsResolver create() {
-        return new GenericInjectableMethodsResolver();
-    }
-
     @Override
     public <T> List<Method> findInjectableMethodsIn(Class<T> cls) {
         return Arrays.stream(cls.getDeclaredMethods())

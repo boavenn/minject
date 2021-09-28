@@ -10,12 +10,8 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(staticName = "create")
 public class GenericInjectableConstructorResolver implements InjectableConstructorResolver {
-    public static GenericInjectableConstructorResolver create() {
-        return new GenericInjectableConstructorResolver();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> Constructor<T> findInjectableConstructorIn(Class<T> cls) {

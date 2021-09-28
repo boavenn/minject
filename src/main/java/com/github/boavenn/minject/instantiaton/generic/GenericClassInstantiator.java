@@ -8,13 +8,14 @@ import com.github.boavenn.minject.instantiaton.ClassInstantiator;
 import com.github.boavenn.minject.instantiaton.InjectableConstructorResolver;
 import com.github.boavenn.minject.instantiaton.InjectableFieldsResolver;
 import com.github.boavenn.minject.instantiaton.InjectableMethodsResolver;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class GenericClassInstantiator implements ClassInstantiator {
     private final Injector injector;
     private final InjectableConstructorResolver constructorResolver;

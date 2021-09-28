@@ -10,12 +10,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(staticName = "create")
 public class GenericInjectableFieldsResolver implements InjectableFieldsResolver {
-    public static GenericInjectableFieldsResolver create() {
-        return new GenericInjectableFieldsResolver();
-    }
-
     @Override
     public <T> List<Field> findInjectableFieldsIn(Class<T> cls) {
         return Arrays.stream(cls.getDeclaredFields())
