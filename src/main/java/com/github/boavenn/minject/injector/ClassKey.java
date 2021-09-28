@@ -91,6 +91,18 @@ public class ClassKey<T> {
         return typeLiteral.getRawType() == Provider.class;
     }
 
+    public boolean isParameterized() {
+        return typeLiteral.getType() instanceof ParameterizedType;
+    }
+
+    public boolean isQualified() {
+        return name != null || qualifier != null;
+    }
+
+    public Type getRawType() {
+        return typeLiteral.getRawType();
+    }
+
     public ClassKey<Provider<T>> toProviderKey() {
         return new ClassKey<>(typeLiteral.asProviderType(), name, qualifier);
     }
