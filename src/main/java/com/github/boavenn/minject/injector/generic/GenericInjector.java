@@ -1,13 +1,15 @@
 package com.github.boavenn.minject.injector.generic;
 
+import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.binding.Binding;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.exceptions.InjectorException;
-import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.Unscoped;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import javax.inject.Provider;
 import javax.inject.Scope;
@@ -16,13 +18,19 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Getter(AccessLevel.PACKAGE)
 public class GenericInjector implements Injector {
     private final BindingRegistry bindingRegistry;
     private final ScopeRegistry scopeRegistry;
 
-    GenericInjector(Function<Injector, BindingRegistry> bindingRegistryConfiguration, ScopeRegistry scopeRegistry) {
-        this.bindingRegistry = bindingRegistryConfiguration.apply(this);
-        this.scopeRegistry = scopeRegistry;
+    GenericInjector(Function<Injector, BindingRegistry> bindingRegistryFactoryMethod,
+                    Function<Injector, ScopeRegistry> scopeRegistryFactoryMethod) {
+        this.bindingRegistry = bindingRegistryFactoryMethod.apply(this);
+        this.scopeRegistry = scopeRegistryFactoryMethod.apply(this);
+    }
+
+    public static GenericInjector usingDefaults() {
+        return builder().build();
     }
 
     public static GenericInjectorBuilder builder() {

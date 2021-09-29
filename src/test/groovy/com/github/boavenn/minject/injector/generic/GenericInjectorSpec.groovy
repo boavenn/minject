@@ -20,8 +20,8 @@ class GenericInjectorSpec extends Specification {
     def bindingRegistry = Mock(BindingRegistry)
     def scopeRegistry = Mock(ScopeRegistry)
     def injector = GenericInjector.builder()
-                                  .using(injector -> bindingRegistry)
-                                  .using(scopeRegistry)
+                                  .usingBindingRegistry(injector -> bindingRegistry)
+                                  .usingScopeRegistry(injector -> scopeRegistry)
                                   .build()
 
     def sampleIntegerValue = Integer.MAX_VALUE // To prevent integer internal cache

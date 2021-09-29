@@ -10,28 +10,33 @@ import com.github.boavenn.minject.scope.generic.GenericScopeRegistry;
 import java.util.function.Function;
 
 public class GenericInjectorBuilder {
-    private Function<Injector, BindingRegistry> bindingRegistryConfiguration;
-    private ScopeRegistry scopeRegistry;
+    private Function<Injector, BindingRegistry> bindingRegistryFactoryMethod;
+    private Function<Injector, ScopeRegistry> scopeRegistryFactoryMethod;
 
     public GenericInjectorBuilder() {
-        bindingRegistryConfiguration = injector -> {
-            var instantiator = GenericClassInstantiator.using(injector).build();
-            return GenericBindingRegistry.using(instantiator);
-        };
-        scopeRegistry = GenericScopeRegistry.empty();
+        bindingRegistryFactoryMethod = defaultBindingRegistryFactoryMethod();
+        scopeRegistryFactoryMethod = defaultScopeRegistryFactoryMethod();
     }
 
-    public GenericInjectorBuilder using(Function<Injector, BindingRegistry> bindingRegistryConfiguration) {
-        this.bindingRegistryConfiguration = bindingRegistryConfiguration;
+    public GenericInjectorBuilder usingBindingRegistry(Function<Injector, BindingRegistry> bindingRegistryFactoryMethod) {
+        this.bindingRegistryFactoryMethod = bindingRegistryFactoryMethod;
         return this;
     }
 
-    public GenericInjectorBuilder using(ScopeRegistry scopeRegistry) {
-        this.scopeRegistry = scopeRegistry;
+    public GenericInjectorBuilder usingScopeRegistry(Function<Injector, ScopeRegistry> scopeRegistryFactoryMethod) {
+        this.scopeRegistryFactoryMethod = scopeRegistryFactoryMethod;
         return this;
     }
 
     public GenericInjector build() {
-        return new GenericInjector(bindingRegistryConfiguration, scopeRegistry);
+        return new GenericInjector(bindingRegistryFactoryMethod, scopeRegistryFactoryMethod);
+    }
+
+    private Function<Injector, BindingRegistry> defaultBindingRegistryFactoryMethod() {
+        return injector -> GenericBindingRegistry.using(GenericClassInstantiator.using(injector).build());
+    }
+
+    private Function<Injector, ScopeRegistry> defaultScopeRegistryFactoryMethod() {
+        return injector -> GenericScopeRegistry.empty();
     }
 }
