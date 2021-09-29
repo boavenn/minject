@@ -7,14 +7,17 @@ import com.github.boavenn.minject.configuration.Binder;
 import com.github.boavenn.minject.configuration.ConfigurationModule;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import com.github.boavenn.minject.scope.ScopeRegistry;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 
 @RequiredArgsConstructor(staticName = "using")
 public class GenericBinder implements Binder {
-    private final Set<ConfigurationModule> installedModules;
+    @Getter
+    private final Set<ConfigurationModule> installedModules = new HashSet<>();
     private final BindingRegistry bindingRegistry;
     private final ScopeRegistry scopeRegistry;
 
