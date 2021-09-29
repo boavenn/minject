@@ -10,5 +10,5 @@ public interface Binder {
     <T> BindingProviderBuilder<T> bind(ClassKey<T> classKey);
     <T> BindingProviderBuilder<T> bind(Class<T> cls);
     void bindScope(Class<? extends Annotation> scope, ScopeHandler scopeHandler);
-    void install(ConfigurationModule module);
+    void install(Module module);
 }

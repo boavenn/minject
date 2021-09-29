@@ -1,5 +1,5 @@
 package com.github.boavenn.minject.configuration;
 
-public interface ConfigurationModule {
+public interface Module {
     void configure(Binder binder);
 }

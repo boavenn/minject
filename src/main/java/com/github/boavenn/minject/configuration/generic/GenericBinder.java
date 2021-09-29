@@ -4,7 +4,7 @@ import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.binding.BindingProviderBuilder;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor(staticName = "using")
 public class GenericBinder implements Binder {
     @Getter
-    private final Set<ConfigurationModule> installedModules = new HashSet<>();
+    private final Set<Module> installedModules = new HashSet<>();
     private final BindingRegistry bindingRegistry;
     private final ScopeRegistry scopeRegistry;
 
@@ -37,7 +37,7 @@ public class GenericBinder implements Binder {
     }
 
     @Override
-    public void install(ConfigurationModule module) {
+    public void install(Module module) {
         if (!installedModules.contains(module)) {
             installedModules.add(module);
             module.configure(this);

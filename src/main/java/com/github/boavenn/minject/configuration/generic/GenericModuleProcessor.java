@@ -2,7 +2,7 @@ package com.github.boavenn.minject.configuration.generic;
 
 import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.ModuleProcessor;
 import com.github.boavenn.minject.configuration.Provides;
 import com.github.boavenn.minject.exceptions.InjectionException;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class GenericModuleProcessor implements ModuleProcessor {
     @Override
-    public void process(ConfigurationModule module, Binder binder, Injector injector) {
+    public void process(Module module, Binder binder, Injector injector) {
         var moduleClass = module.getClass();
         for (var method : moduleClass.getDeclaredMethods()) {
             if (!isConfigurationMethod(method) && isProvidingMethod(method)) {
@@ -65,7 +65,7 @@ public class GenericModuleProcessor implements ModuleProcessor {
     @SuppressWarnings("unchecked")
     private <T> Provider<T> createProviderFor(Method method,
                                               List<? extends ClassKey<?>> paramKeys,
-                                              ConfigurationModule module,
+                                              Module module,
                                               Injector injector) {
         return () -> {
             try {

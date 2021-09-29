@@ -1,13 +1,13 @@
 package com.github.boavenn.minject.configuration.generic;
 
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.Provides;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-class SampleModule implements ConfigurationModule {
+class SampleModule implements Module {
     @Provides
     @Override
     public void configure(Binder binder) {

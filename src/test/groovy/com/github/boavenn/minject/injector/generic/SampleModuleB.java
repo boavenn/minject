@@ -2,13 +2,13 @@ package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.Provides;
 import com.github.boavenn.minject.injector.Injector;
 
 import javax.inject.Named;
 
-class SampleModuleB implements ConfigurationModule {
+class SampleModuleB implements Module {
     public static final String propertyName = "somePropertyFromModuleB";
     public static final String propertyValue = "someValueInModuleB";
 

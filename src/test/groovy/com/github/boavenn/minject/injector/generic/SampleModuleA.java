@@ -2,14 +2,14 @@ package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.Provides;
 
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-class SampleModuleA implements ConfigurationModule {
+class SampleModuleA implements Module {
     public static final String propertyName = "someProperty";
     public static final String propertyValue = "someValue";
     public static final Integer integerValue = 1024;

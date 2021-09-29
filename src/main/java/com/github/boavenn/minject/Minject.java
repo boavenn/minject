@@ -1,6 +1,6 @@
 package com.github.boavenn.minject;
 
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.ModuleProcessor;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.injector.generic.GenericInjectorFactory;
@@ -17,15 +17,15 @@ public final class Minject {
         return createInjectorWith(Collections.emptyList());
     }
 
-    public static Injector createInjectorWith(ConfigurationModule... modules) {
+    public static Injector createInjectorWith(Module... modules) {
         return createInjectorWith(Arrays.asList(modules));
     }
 
-    public static Injector createInjectorWith(List<ConfigurationModule> modules) {
+    public static Injector createInjectorWith(List<Module> modules) {
         return createInjectorWith(modules, Collections.emptyList());
     }
 
-    public static Injector createInjectorWith(List<ConfigurationModule> modules, List<ModuleProcessor> moduleProcessors) {
+    public static Injector createInjectorWith(List<Module> modules, List<ModuleProcessor> moduleProcessors) {
         return new GenericInjectorFactory().addModules(modules)
                                            .addModuleProcessors(moduleProcessors)
                                            .create();

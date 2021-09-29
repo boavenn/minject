@@ -2,7 +2,7 @@ package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.configuration.Binder;
-import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.ModuleProcessor;
 import com.github.boavenn.minject.configuration.generic.GenericBinder;
 import com.github.boavenn.minject.configuration.generic.GenericModuleProcessor;
@@ -16,14 +16,14 @@ import javax.inject.Singleton;
 import java.util.*;
 
 public class GenericInjectorFactory {
-    private final Set<ConfigurationModule> initialModules = new HashSet<>();
+    private final Set<Module> initialModules = new HashSet<>();
     private final List<ModuleProcessor> moduleProcessors = new LinkedList<>();
 
     public GenericInjectorFactory() {
         moduleProcessors.add(new GenericModuleProcessor());
     }
 
-    public GenericInjectorFactory addModules(Collection<ConfigurationModule> modules) {
+    public GenericInjectorFactory addModules(Collection<Module> modules) {
         initialModules.addAll(modules);
         return this;
     }
@@ -65,7 +65,7 @@ public class GenericInjectorFactory {
         initialModules.forEach(binder::install);
     }
 
-    private void processModules(Iterable<ConfigurationModule> modules, Binder binder, Injector injector) {
+    private void processModules(Iterable<Module> modules, Binder binder, Injector injector) {
         for (var moduleProcessor : moduleProcessors) {
             modules.forEach(module -> moduleProcessor.process(module, binder, injector));
         }

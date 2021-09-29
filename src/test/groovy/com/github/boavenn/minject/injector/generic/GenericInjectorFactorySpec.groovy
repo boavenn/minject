@@ -2,7 +2,7 @@ package com.github.boavenn.minject.injector.generic
 
 import com.github.boavenn.minject.ClassKey
 import com.github.boavenn.minject.configuration.Binder
-import com.github.boavenn.minject.configuration.ConfigurationModule
+import com.github.boavenn.minject.configuration.Module
 import com.github.boavenn.minject.injector.Injector
 import spock.lang.Specification
 
@@ -46,8 +46,8 @@ class GenericInjectorFactorySpec extends Specification {
 
     def "create() WHEN there is circular reference between modules SHOULD not register same module two times"() {
         given:
-        def sampleCircularModuleA = Mock(ConfigurationModule)
-        def sampleCircularModuleB = Mock(ConfigurationModule)
+        def sampleCircularModuleA = Mock(Module)
+        def sampleCircularModuleB = Mock(Module)
 
         and:
         1 * sampleCircularModuleA.configure(_ as Binder) >> { Binder binder ->
