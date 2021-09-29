@@ -22,28 +22,26 @@ class GenericInjectorFactorySpec extends Specification {
     def "create() WHEN given some modules SHOULD register their configuration to injector"() {
         given:
         def sampleModule = new SampleModuleA()
+        def stringAKey = ClassKey.of(String, SampleModuleA.propertyName)
+        def stringBKey = ClassKey.of(String, SampleModuleB.propertyName)
+        def providesAKey = ClassKey.of(String, SampleModuleA.providedStringName)
+        def providesBKey = ClassKey.of(String, SampleModuleB.providedStringName)
 
         when:
-        injectorFactory.addModules(List.of(sampleModule))
-        def injector = injectorFactory.create()
+        def injector = injectorFactory.addModules(List.of(sampleModule)).create()
+        def stringA = injector.getInstanceOf(stringAKey)
+        def stringB = injector.getInstanceOf(stringBKey)
+        def integer = injector.getInstanceOf(Integer)
 
         then:
-        injector.getInstanceOf(ClassKey.of(String, SampleModuleA.propertyName)) == SampleModuleA.propertyValue
-        injector.getInstanceOf(Integer) == SampleModuleA.integerValue
-    }
+        stringA == SampleModuleA.propertyValue
+        stringB == SampleModuleB.propertyValue
+        integer == SampleModuleA.integerValue
 
-    def "create() WHEN one module installs the other SHOULD create generic injector with their configuration"() {
-        given:
-        def sampleModule = new SampleModuleA()
-
-        when:
-        injectorFactory.addModules(List.of(sampleModule))
-        def injector = injectorFactory.create()
-
-        then:
-        injector.getInstanceOf(ClassKey.of(String, SampleModuleA.propertyName)) == SampleModuleA.propertyValue
-        injector.getInstanceOf(Integer) == SampleModuleA.integerValue
-        injector.getInstanceOf(ClassKey.of(String, SampleModuleB.propertyName)) == SampleModuleB.propertyValue
+        injector.getInstanceOf(providesAKey) == stringA + stringB
+        injector.getInstanceOf(providesAKey) === injector.getInstanceOf(providesAKey)
+        injector.getInstanceOf(providesBKey) == stringB + integer
+        injector.getInstanceOf(providesBKey) !== injector.getInstanceOf(providesBKey)
     }
 
     def "create() WHEN there is circular reference between modules SHOULD not register same module two times"() {
@@ -60,8 +58,7 @@ class GenericInjectorFactorySpec extends Specification {
         }
 
         when:
-        injectorFactory.addModules(List.of(sampleCircularModuleA))
-        def injector = injectorFactory.create()
+        def injector = injectorFactory.addModules(List.of(sampleCircularModuleA)).create()
 
         then:
         injector.getInstanceOf(Injector) == injector

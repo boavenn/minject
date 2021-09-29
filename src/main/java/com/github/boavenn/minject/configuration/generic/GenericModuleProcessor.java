@@ -69,6 +69,7 @@ public class GenericModuleProcessor implements ModuleProcessor {
                                               Injector injector) {
         return () -> {
             try {
+                method.setAccessible(true);
                 return (T) method.invoke(module, resolveKeys(paramKeys, injector));
             } catch (Exception e) {
                 throw InjectionException.injectableMethodInvocation(e);

@@ -1,8 +1,11 @@
 package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.binding.BindingRegistry;
+import com.github.boavenn.minject.configuration.Binder;
 import com.github.boavenn.minject.configuration.ConfigurationModule;
+import com.github.boavenn.minject.configuration.ModuleProcessor;
 import com.github.boavenn.minject.configuration.generic.GenericBinder;
+import com.github.boavenn.minject.configuration.generic.GenericModuleProcessor;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.Unscoped;
@@ -13,10 +16,21 @@ import javax.inject.Singleton;
 import java.util.*;
 
 public class GenericInjectorFactory {
-    private final Set<ConfigurationModule> modules = new HashSet<>();
+    private final Set<ConfigurationModule> initialModules = new HashSet<>();
+    private final List<ModuleProcessor> moduleProcessors = new LinkedList<>();
 
-    public void addModules(Collection<ConfigurationModule> modules) {
-        this.modules.addAll(modules);
+    public GenericInjectorFactory() {
+        moduleProcessors.add(new GenericModuleProcessor());
+    }
+
+    public GenericInjectorFactory addModules(Collection<ConfigurationModule> modules) {
+        initialModules.addAll(modules);
+        return this;
+    }
+
+    public GenericInjectorFactory addModuleProcessors(Collection<ModuleProcessor> moduleProcessors) {
+        this.moduleProcessors.addAll(moduleProcessors);
+        return this;
     }
 
     public GenericInjector create() {
@@ -28,8 +42,11 @@ public class GenericInjectorFactory {
         registerInjector(bindingRegistry, injector);
         registerDefaultScopes(scopeRegistry);
 
-        var injectorBinder = GenericBinder.using(modules, bindingRegistry, scopeRegistry);
-        modules.forEach(module -> module.configure(injectorBinder));
+        var binder = GenericBinder.using(bindingRegistry, scopeRegistry);
+        configureModules(binder);
+
+        var installedModules = binder.getInstalledModules();
+        processModules(installedModules, binder, injector);
 
         return injector;
     }
@@ -42,5 +59,15 @@ public class GenericInjectorFactory {
     private void registerDefaultScopes(ScopeRegistry scopeRegistry) {
         scopeRegistry.registerScope(Unscoped.class, UnscopedScopeHandler.empty());
         scopeRegistry.registerScope(Singleton.class, SingletonScopeHandler.empty());
+    }
+
+    private void configureModules(GenericBinder binder) {
+        initialModules.forEach(binder::install);
+    }
+
+    private void processModules(Iterable<ConfigurationModule> modules, Binder binder, Injector injector) {
+        for (var moduleProcessor : moduleProcessors) {
+            modules.forEach(module -> moduleProcessor.process(module, binder, injector));
+        }
     }
 }
