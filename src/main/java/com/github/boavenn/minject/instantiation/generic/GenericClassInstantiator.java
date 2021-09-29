@@ -3,7 +3,7 @@ package com.github.boavenn.minject.instantiation.generic;
 import com.github.boavenn.minject.exceptions.InjectionException;
 import com.github.boavenn.minject.instantiation.*;
 import com.github.boavenn.minject.utils.Types;
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.injector.Injector;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

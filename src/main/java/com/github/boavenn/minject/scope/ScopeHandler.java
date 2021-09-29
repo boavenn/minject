@@ -1,6 +1,6 @@
 package com.github.boavenn.minject.scope;
 
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 
 import javax.inject.Provider;
 

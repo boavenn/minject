@@ -1,4 +1,4 @@
-package com.github.boavenn.minject.injector;
+package com.github.boavenn.minject;
 
 import javax.inject.Named;
 import javax.inject.Provider;

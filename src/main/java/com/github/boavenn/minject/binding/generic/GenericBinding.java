@@ -1,8 +1,7 @@
 package com.github.boavenn.minject.binding.generic;
 
 import com.github.boavenn.minject.binding.Binding;
-import com.github.boavenn.minject.injector.ClassKey;
-import lombok.AccessLevel;
+import com.github.boavenn.minject.ClassKey;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

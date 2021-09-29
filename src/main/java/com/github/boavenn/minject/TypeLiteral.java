@@ -1,4 +1,4 @@
-package com.github.boavenn.minject.injector;
+package com.github.boavenn.minject;
 
 import com.github.boavenn.minject.exceptions.TypeException;
 import com.github.boavenn.minject.utils.Types;

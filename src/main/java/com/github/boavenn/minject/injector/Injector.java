@@ -1,5 +1,7 @@
 package com.github.boavenn.minject.injector;
 
+import com.github.boavenn.minject.ClassKey;
+
 import javax.inject.Provider;
 
 public interface Injector {

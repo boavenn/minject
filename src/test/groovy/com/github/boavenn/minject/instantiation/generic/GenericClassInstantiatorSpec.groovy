@@ -1,9 +1,8 @@
 package com.github.boavenn.minject.instantiation.generic
 
 import com.github.boavenn.minject.exceptions.InjectionException
-import com.github.boavenn.minject.injector.ClassKey
+import com.github.boavenn.minject.ClassKey
 import com.github.boavenn.minject.injector.Injector
-import com.github.boavenn.minject.instantiation.generic.GenericClassInstantiator
 import spock.lang.Specification
 
 import javax.inject.Provider

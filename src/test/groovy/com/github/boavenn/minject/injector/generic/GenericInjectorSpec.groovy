@@ -5,7 +5,7 @@ import com.github.boavenn.minject.binding.BindingRegistry
 import com.github.boavenn.minject.binding.BindingScopeBuilder
 import com.github.boavenn.minject.binding.generic.GenericBinding
 import com.github.boavenn.minject.exceptions.InjectorException
-import com.github.boavenn.minject.injector.ClassKey
+import com.github.boavenn.minject.ClassKey
 import com.github.boavenn.minject.scope.ScopeRegistry
 import com.github.boavenn.minject.scope.Unscoped
 import com.github.boavenn.minject.scope.generic.SingletonScopeHandler

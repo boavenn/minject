@@ -1,7 +1,7 @@
 package com.github.boavenn.minject.utils
 
 import com.github.boavenn.minject.exceptions.TypeException
-import com.github.boavenn.minject.injector.TypeLiteral
+import com.github.boavenn.minject.TypeLiteral
 import spock.lang.Specification
 
 import javax.inject.Provider

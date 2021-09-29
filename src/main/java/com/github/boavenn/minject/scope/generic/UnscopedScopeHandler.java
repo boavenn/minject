@@ -1,6 +1,6 @@
 package com.github.boavenn.minject.scope.generic;
 
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import lombok.NoArgsConstructor;
 

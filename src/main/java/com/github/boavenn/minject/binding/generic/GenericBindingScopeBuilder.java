@@ -3,7 +3,7 @@ package com.github.boavenn.minject.binding.generic;
 import com.github.boavenn.minject.scope.Unscoped;
 import com.github.boavenn.minject.binding.Binding;
 import com.github.boavenn.minject.binding.BindingScopeBuilder;
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Provider;

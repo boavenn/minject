@@ -1,9 +1,7 @@
-package com.github.boavenn.minject.injector
+package com.github.boavenn.minject
 
 
 import com.github.boavenn.minject.exceptions.ClassKeyCreationException
-import com.github.boavenn.minject.injector.ClassKey
-import com.github.boavenn.minject.injector.TypeLiteral
 import spock.lang.Specification
 
 import javax.inject.Named

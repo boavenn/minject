@@ -1,8 +1,7 @@
 package com.github.boavenn.minject.scope.generic
 
-import com.github.boavenn.minject.binding.generic.SuperclassClass
-import com.github.boavenn.minject.injector.ClassKey
-import com.github.boavenn.minject.scope.generic.SingletonScopeHandler
+
+import com.github.boavenn.minject.ClassKey
 import org.spockframework.util.Assert
 import spock.lang.Specification
 

@@ -1,6 +1,6 @@
 package com.github.boavenn.minject.binding;
 
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;

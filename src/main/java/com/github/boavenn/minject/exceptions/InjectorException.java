@@ -1,6 +1,6 @@
 package com.github.boavenn.minject.exceptions;
 
-import com.github.boavenn.minject.injector.ClassKey;
+import com.github.boavenn.minject.ClassKey;
 
 import java.lang.annotation.Annotation;
 

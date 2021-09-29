@@ -1,4 +1,4 @@
-package com.github.boavenn.minject.injector;
+package com.github.boavenn.minject;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
