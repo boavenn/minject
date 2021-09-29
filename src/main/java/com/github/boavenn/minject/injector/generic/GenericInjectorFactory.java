@@ -10,12 +10,10 @@ import com.github.boavenn.minject.scope.generic.SingletonScopeHandler;
 import com.github.boavenn.minject.scope.generic.UnscopedScopeHandler;
 
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GenericInjectorFactory {
-    private final List<ConfigurationModule> modules = new LinkedList<>();
+    private final Set<ConfigurationModule> modules = new HashSet<>();
 
     public void addModules(Collection<ConfigurationModule> modules) {
         this.modules.addAll(modules);
@@ -30,7 +28,7 @@ public class GenericInjectorFactory {
         registerInjector(bindingRegistry, injector);
         registerDefaultScopes(scopeRegistry);
 
-        var injectorBinder = GenericBinder.using(bindingRegistry, scopeRegistry);
+        var injectorBinder = GenericBinder.using(modules, bindingRegistry, scopeRegistry);
         modules.forEach(module -> module.configure(injectorBinder));
 
         return injector;
