@@ -1,7 +1,6 @@
 package com.github.boavenn.minject.instantiation.generic
 
 
-import com.github.boavenn.minject.instantiation.generic.GenericInjectableMethodsResolver
 import spock.lang.Specification
 
 class GenericInjectableMethodsResolverSpec extends Specification {

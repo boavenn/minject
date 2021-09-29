@@ -2,7 +2,6 @@ package com.github.boavenn.minject.instantiation.generic
 
 
 import com.github.boavenn.minject.exceptions.InjectionPointException
-import com.github.boavenn.minject.instantiation.generic.GenericInjectableConstructorResolver
 import spock.lang.Specification
 
 class GenericInjectableConstructorResolverSpec extends Specification {

@@ -2,7 +2,6 @@ package com.github.boavenn.minject.scope.generic
 
 import com.github.boavenn.minject.scope.ScopeHandler
 import com.github.boavenn.minject.scope.Unscoped
-import com.github.boavenn.minject.scope.generic.GenericScopeRegistry
 import spock.lang.Specification
 
 import javax.inject.Singleton
