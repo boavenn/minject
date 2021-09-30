@@ -2,7 +2,8 @@ package com.github.boavenn.minject.instantiation;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Queue;
 
 public interface OverriddenMethodsStrategy {
-    List<Method> removeOverriddenMethods(List<Method> subclassMethods, List<Method> superclassMethods);
+    Queue<List<Method>> filterOverriddenMethods(Queue<List<Method>> inheritanceTreeMethods);
 }

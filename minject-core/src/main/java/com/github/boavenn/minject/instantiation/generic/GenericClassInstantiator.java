@@ -52,8 +52,12 @@ public class GenericClassInstantiator implements ClassInstantiator {
     }
 
     private <T> void injectMembers(Class<? super T> cls, T instance) {
-        var fieldsItr = allInjectableFieldsOf(cls).iterator();
-        var methodsItr = allInjectableMethodsOf(cls).iterator();
+        var fields = allInjectableFieldsOf(cls);
+        var methods = allInjectableMethodsOf(cls);
+        var filteredMethods = overriddenMethodsStrategy.filterOverriddenMethods(methods);
+
+        var fieldsItr = fields.iterator();
+        var methodsItr = filteredMethods.iterator();
 
         while (fieldsItr.hasNext() && methodsItr.hasNext()) {
             injectFields(fieldsItr.next(), instance);
@@ -61,7 +65,7 @@ public class GenericClassInstantiator implements ClassInstantiator {
         }
     }
 
-    private Deque<List<Field>> allInjectableFieldsOf(Class<?> cls) {
+    private Queue<List<Field>> allInjectableFieldsOf(Class<?> cls) {
         Deque<List<Field>> fields = new LinkedList<>();
 
         fields.addFirst(fieldsResolver.findInjectableFieldsIn(cls));
@@ -75,16 +79,14 @@ public class GenericClassInstantiator implements ClassInstantiator {
         return fields;
     }
 
-    private Deque<List<Method>> allInjectableMethodsOf(Class<?> cls) {
+    private Queue<List<Method>> allInjectableMethodsOf(Class<?> cls) {
         Deque<List<Method>> methods = new LinkedList<>();
 
         methods.addFirst(methodsResolver.findInjectableMethodsIn(cls));
 
         var superclass = cls.getSuperclass();
         while (isClassInjectable(superclass)) {
-            var superclassMethods = methodsResolver.findInjectableMethodsIn(superclass);
-            var subclassMethods = methods.getLast();
-            methods.addFirst(overriddenMethodsStrategy.removeOverriddenMethods(subclassMethods, superclassMethods));
+            methods.addFirst(methodsResolver.findInjectableMethodsIn(superclass));
             superclass = superclass.getSuperclass();
         }
 
