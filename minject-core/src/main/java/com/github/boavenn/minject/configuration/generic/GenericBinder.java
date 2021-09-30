@@ -5,6 +5,7 @@ import com.github.boavenn.minject.binding.BindingProviderBuilder;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.configuration.Binder;
 import com.github.boavenn.minject.configuration.Module;
+import com.github.boavenn.minject.configuration.RegistrationStrategy;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import lombok.Getter;
@@ -20,20 +21,27 @@ public class GenericBinder implements Binder {
     private final Set<Module> installedModules = new HashSet<>();
     private final BindingRegistry bindingRegistry;
     private final ScopeRegistry scopeRegistry;
+    private final RegistrationStrategy registrationStrategy;
 
     @Override
     public <T> BindingProviderBuilder<T> bind(ClassKey<T> classKey) {
-        return bindingRegistry.bind(classKey);
+        var isRegistered = bindingRegistry.isRegistered(classKey);
+        return registrationStrategy.register(() -> bindingRegistry.bind(classKey), isRegistered, classKey.toString());
     }
 
     @Override
     public <T> BindingProviderBuilder<T> bind(Class<T> cls) {
-        return bindingRegistry.bind(cls);
+        var isRegistered = bindingRegistry.isRegistered(cls);
+        return registrationStrategy.register(() -> bindingRegistry.bind(cls), isRegistered, cls.getName());
     }
 
     @Override
     public void bindScope(Class<? extends Annotation> scope, ScopeHandler scopeHandler) {
-        scopeRegistry.registerScope(scope, scopeHandler);
+        var isRegistered = scopeRegistry.isRegistered(scope);
+        registrationStrategy.register(() -> {
+            scopeRegistry.registerScope(scope, scopeHandler);
+            return null; // So supplier is of <Void> type
+        }, isRegistered, scope.getName());
     }
 
     @Override
