@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
+@EqualsAndHashCode(cacheStrategy = EqualsAndHashCode.CacheStrategy.LAZY)
 public class ClassKey<T> {
     private final TypeLiteral<T> typeLiteral;
     private final String name;

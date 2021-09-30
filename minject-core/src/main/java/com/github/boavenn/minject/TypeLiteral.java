@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(cacheStrategy = EqualsAndHashCode.CacheStrategy.LAZY)
 public class TypeLiteral<T> {
     private final Class<T> rawType;
     private final Type type;
