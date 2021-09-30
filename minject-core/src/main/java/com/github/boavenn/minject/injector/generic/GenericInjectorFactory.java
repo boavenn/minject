@@ -1,10 +1,8 @@
 package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.binding.BindingRegistry;
-import com.github.boavenn.minject.configuration.Binder;
 import com.github.boavenn.minject.configuration.Module;
-import com.github.boavenn.minject.configuration.ModuleProcessor;
-import com.github.boavenn.minject.configuration.RegistrationPolicy;
+import com.github.boavenn.minject.configuration.*;
 import com.github.boavenn.minject.configuration.generic.GenericBinder;
 import com.github.boavenn.minject.configuration.generic.GenericModuleProcessor;
 import com.github.boavenn.minject.injector.Injector;
@@ -12,19 +10,26 @@ import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.Unscoped;
 import com.github.boavenn.minject.scope.generic.SingletonScopeHandler;
 import com.github.boavenn.minject.scope.generic.UnscopedScopeHandler;
+import lombok.NoArgsConstructor;
 
 import javax.inject.Singleton;
 import java.util.*;
 
+@NoArgsConstructor(staticName = "empty")
 public class GenericInjectorFactory {
-    private static final RegistrationPolicy DEFAULT_REGISTRATION_POLICY = RegistrationPolicy.THROW;
-    private static final List<ModuleProcessor> DEFAULT_PROCESSORS = List.of(new GenericModuleProcessor());
+    private static final RegistrationPolicy DEFAULT_BINDING_REGISTRATION_POLICY = RegistrationPolicy.THROW;
+    private static final RegistrationPolicy DEFAULT_SCOPE_REGISTRATION_POLICY = RegistrationPolicy.THROW;
+    private static final List<ModuleProcessor> DEFAULT_MODULE_PROCESSORS = List.of(new GenericModuleProcessor());
 
     private final Set<Module> initialModules = new HashSet<>();
     private final List<ModuleProcessor> moduleProcessors = new LinkedList<>();
 
-    public GenericInjectorFactory() {
-        moduleProcessors.addAll(DEFAULT_PROCESSORS);
+    private RegistrationStrategy bindingRegistrationStrategy = DEFAULT_BINDING_REGISTRATION_POLICY.getStrategy();
+    private RegistrationStrategy scopeRegistrationStrategy = DEFAULT_SCOPE_REGISTRATION_POLICY.getStrategy();
+
+    public static GenericInjectorFactory withDefaults() {
+        return GenericInjectorFactory.empty()
+                                     .addModuleProcessors(DEFAULT_MODULE_PROCESSORS);
     }
 
     public GenericInjectorFactory addModules(Collection<Module> modules) {
@@ -37,6 +42,24 @@ public class GenericInjectorFactory {
         return this;
     }
 
+    public GenericInjectorFactory setBindingRegistrationPolicy(RegistrationPolicy registrationPolicy) {
+        return setBindingRegistrationPolicy(registrationPolicy.getStrategy());
+    }
+
+    public GenericInjectorFactory setBindingRegistrationPolicy(RegistrationStrategy registrationStrategy) {
+        this.bindingRegistrationStrategy = registrationStrategy;
+        return this;
+    }
+
+    public GenericInjectorFactory setScopeRegistrationPolicy(RegistrationPolicy registrationPolicy) {
+        return setScopeRegistrationPolicy(registrationPolicy.getStrategy());
+    }
+
+    public GenericInjectorFactory setScopeRegistrationPolicy(RegistrationStrategy registrationStrategy) {
+        this.scopeRegistrationStrategy = registrationStrategy;
+        return this;
+    }
+
     public GenericInjector create() {
         var injector = GenericInjector.usingDefaults();
 
@@ -46,7 +69,10 @@ public class GenericInjectorFactory {
         registerInjector(bindingRegistry, injector);
         registerDefaultScopes(scopeRegistry);
 
-        var binder = GenericBinder.using(bindingRegistry, scopeRegistry, DEFAULT_REGISTRATION_POLICY.getStrategy());
+        var binder = GenericBinder.using(bindingRegistry,
+                                         scopeRegistry,
+                                         bindingRegistrationStrategy,
+                                         scopeRegistrationStrategy);
         configureModules(binder);
 
         var installedModules = binder.getInstalledModules();

@@ -1,4 +1,4 @@
-package com.github.boavenn.minject;
+package com.github.boavenn.minject.injector.generic;
 
 import com.github.boavenn.minject.configuration.Binder;
 import com.github.boavenn.minject.configuration.Module;

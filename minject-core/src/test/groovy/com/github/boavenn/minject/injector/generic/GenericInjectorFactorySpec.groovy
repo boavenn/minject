@@ -7,11 +7,10 @@ import com.github.boavenn.minject.injector.Injector
 import spock.lang.Specification
 
 class GenericInjectorFactorySpec extends Specification {
-    def injectorFactory = new GenericInjectorFactory()
-
-    def "create() SHOULD create generic injector with default configuration"() {
+    def "withDefaults() SHOULD create generic injector with default configuration"() {
         when:
-        def injector = injectorFactory.create()
+        def injector = GenericInjectorFactory.withDefaults()
+                                             .create()
 
         then:
         injector.getInstanceOf(Injector) == injector
@@ -19,7 +18,7 @@ class GenericInjectorFactorySpec extends Specification {
         injector.getInstanceOf(UnqualifiedSingletonClass) === injector.getInstanceOf(UnqualifiedSingletonClass)
     }
 
-    def "create() WHEN given some modules SHOULD register their configuration to injector"() {
+    def "addModules() WHEN given some modules SHOULD register their configuration to injector"() {
         given:
         def sampleModule = new SampleModuleA()
         def stringAKey = ClassKey.of(String, SampleModuleA.propertyName)
@@ -28,7 +27,9 @@ class GenericInjectorFactorySpec extends Specification {
         def providesBKey = ClassKey.of(String, SampleModuleB.providedStringName)
 
         when:
-        def injector = injectorFactory.addModules(List.of(sampleModule)).create()
+        def injector = GenericInjectorFactory.withDefaults()
+                                             .addModules([sampleModule])
+                                             .create()
         def stringA = injector.getInstanceOf(stringAKey)
         def stringB = injector.getInstanceOf(stringBKey)
         def integer = injector.getInstanceOf(Integer)
@@ -44,7 +45,7 @@ class GenericInjectorFactorySpec extends Specification {
         injector.getInstanceOf(providesBKey) !== injector.getInstanceOf(providesBKey)
     }
 
-    def "create() WHEN there is circular reference between modules SHOULD not register same module two times"() {
+    def "addModules() WHEN there is circular reference between modules SHOULD not register same module two times"() {
         given:
         def sampleCircularModuleA = Mock(Module)
         def sampleCircularModuleB = Mock(Module)
@@ -58,9 +59,26 @@ class GenericInjectorFactorySpec extends Specification {
         }
 
         when:
-        def injector = injectorFactory.addModules(List.of(sampleCircularModuleA)).create()
+        def injector = GenericInjectorFactory.withDefaults()
+                                             .addModules([sampleCircularModuleA])
+                                             .create()
 
         then:
         injector.getInstanceOf(Injector) == injector
+    }
+
+    def "addModuleProcessors() WHEN given some module processors SHOULD create injector correctly"() {
+        given:
+        def sampleModule = new SampleModuleA()
+        def sampleModuleProcessor = new SampleModuleProcessor()
+
+        when:
+        GenericInjectorFactory.withDefaults()
+                              .addModules([sampleModule])
+                              .addModuleProcessors([sampleModuleProcessor])
+                              .create()
+
+        then:
+        sampleModuleProcessor.getProcessedModulesCounter() == 2
     }
 }

@@ -15,11 +15,13 @@ class GenericBinderSpec extends Specification {
     def scopeRegistry = Mock(ScopeRegistry)
 
     def sampleKeyName = "sampleName"
+    def throwingStrategy = RegistrationPolicy.THROW.getStrategy()
+    def replacingStrategy = RegistrationPolicy.REPLACE.getStrategy()
 
     def "bind() WHEN given a class key which is not registered SHOULD call binding registry"() {
         given:
         def classKey = ClassKey.of(String, sampleKeyName)
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         bindingRegistry.isRegistered(classKey) >> false
@@ -34,7 +36,7 @@ class GenericBinderSpec extends Specification {
     def "bind() WHEN given a class key which is already registered and replacing strategy is set SHOULD call binding registry"() {
         given:
         def classKey = ClassKey.of(String, sampleKeyName)
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.REPLACE.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, replacingStrategy, replacingStrategy)
 
         and:
         bindingRegistry.isRegistered(classKey) >> true
@@ -49,7 +51,7 @@ class GenericBinderSpec extends Specification {
     def "bind() WHEN given a class key which is already registered and throwing strategy is set SHOULD throw an exception"() {
         given:
         def classKey = ClassKey.of(String, sampleKeyName)
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         bindingRegistry.isRegistered(classKey) >> true
@@ -65,7 +67,7 @@ class GenericBinderSpec extends Specification {
     def "bind() WHEN given a class which is not registered SHOULD call binding registry"() {
         given:
         def cls = String
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         bindingRegistry.isRegistered(cls) >> false
@@ -80,7 +82,7 @@ class GenericBinderSpec extends Specification {
     def "bind() WHEN given a class which is already registered and replacing strategy is set SHOULD call binding registry"() {
         given:
         def cls = String
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.REPLACE.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, replacingStrategy, replacingStrategy)
 
         and:
         bindingRegistry.isRegistered(cls) >> true
@@ -95,7 +97,7 @@ class GenericBinderSpec extends Specification {
     def "bind() WHEN given a class which is already registered and throwing strategy is set SHOULD throw an exception"() {
         given:
         def cls = String
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         bindingRegistry.isRegistered(cls) >> true
@@ -112,7 +114,7 @@ class GenericBinderSpec extends Specification {
         given:
         def scope = Unscoped
         def sampleHandler = UnscopedScopeHandler.empty()
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         scopeRegistry.isRegistered(scope) >> false
@@ -128,7 +130,7 @@ class GenericBinderSpec extends Specification {
         given:
         def scope = Unscoped
         def sampleHandler = UnscopedScopeHandler.empty()
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.REPLACE.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, replacingStrategy, replacingStrategy)
 
         and:
         scopeRegistry.isRegistered(scope) >> true
@@ -144,7 +146,7 @@ class GenericBinderSpec extends Specification {
         given:
         def scope = Unscoped
         def sampleHandler = UnscopedScopeHandler.empty()
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         and:
         scopeRegistry.isRegistered(scope) >> true
@@ -160,7 +162,7 @@ class GenericBinderSpec extends Specification {
     def "install() WHEN given a module which is not installed SHOULD add it to list of installed modules"() {
         given:
         def sampleModule = Mock(Module)
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         when:
         binder.install(sampleModule)
@@ -172,7 +174,7 @@ class GenericBinderSpec extends Specification {
     def "install() WHEN given a module which is already installed SHOULD not add it to list of installed modules"() {
         given:
         def sampleModule = Mock(Module)
-        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, RegistrationPolicy.THROW.getStrategy())
+        def binder = GenericBinder.using(bindingRegistry, scopeRegistry, throwingStrategy, throwingStrategy)
 
         when:
         binder.install(sampleModule)

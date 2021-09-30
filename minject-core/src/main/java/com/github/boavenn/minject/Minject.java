@@ -1,7 +1,6 @@
 package com.github.boavenn.minject;
 
 import com.github.boavenn.minject.configuration.Module;
-import com.github.boavenn.minject.configuration.ModuleProcessor;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.injector.generic.GenericInjectorFactory;
 import lombok.AccessLevel;
@@ -22,12 +21,8 @@ public final class Minject {
     }
 
     public static Injector createInjectorWith(List<Module> modules) {
-        return createInjectorWith(modules, Collections.emptyList());
-    }
-
-    public static Injector createInjectorWith(List<Module> modules, List<ModuleProcessor> moduleProcessors) {
-        return new GenericInjectorFactory().addModules(modules)
-                                           .addModuleProcessors(moduleProcessors)
-                                           .create();
+        return GenericInjectorFactory.withDefaults()
+                                     .addModules(modules)
+                                     .create();
     }
 }

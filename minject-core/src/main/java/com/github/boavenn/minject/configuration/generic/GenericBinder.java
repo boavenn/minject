@@ -21,24 +21,26 @@ public class GenericBinder implements Binder {
     private final Set<Module> installedModules = new HashSet<>();
     private final BindingRegistry bindingRegistry;
     private final ScopeRegistry scopeRegistry;
-    private final RegistrationStrategy registrationStrategy;
+
+    private final RegistrationStrategy bindingRegistrationStrategy;
+    private final RegistrationStrategy scopeRegistrationStrategy;
 
     @Override
     public <T> BindingProviderBuilder<T> bind(ClassKey<T> classKey) {
         var isRegistered = bindingRegistry.isRegistered(classKey);
-        return registrationStrategy.register(() -> bindingRegistry.bind(classKey), isRegistered, classKey.toString());
+        return bindingRegistrationStrategy.register(() -> bindingRegistry.bind(classKey), isRegistered, classKey.toString());
     }
 
     @Override
     public <T> BindingProviderBuilder<T> bind(Class<T> cls) {
         var isRegistered = bindingRegistry.isRegistered(cls);
-        return registrationStrategy.register(() -> bindingRegistry.bind(cls), isRegistered, cls.getName());
+        return bindingRegistrationStrategy.register(() -> bindingRegistry.bind(cls), isRegistered, cls.getName());
     }
 
     @Override
     public void bindScope(Class<? extends Annotation> scope, ScopeHandler scopeHandler) {
         var isRegistered = scopeRegistry.isRegistered(scope);
-        registrationStrategy.register(() -> {
+        scopeRegistrationStrategy.register(() -> {
             scopeRegistry.registerScope(scope, scopeHandler);
             return null; // So supplier is of <Void> type
         }, isRegistered, scope.getName());
