@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 @NoArgsConstructor(staticName = "create")
 public class RegistrationThrowingStrategy implements RegistrationStrategy {
     @Override
-    public <T> T register(Supplier<T> registrationCallback, boolean alreadyExists, String objRepresentation) {
-        if (alreadyExists) {
-            throw BindingException.bindingAlreadyExists(objRepresentation);
+    public <T> T register(Supplier<T> registrationCallback, boolean exists, String key) {
+        if (exists) {
+            throw BindingException.bindingAlreadyExists(key);
         }
         return registrationCallback.get();
     }

@@ -285,15 +285,15 @@ public class MyModuleProcessor implements ModuleProcessor {
 #### Registration strategies
 
 By default, Minject has two registration strategies available:
-* `RegistrationPolicy.THROW`\
+* `RegistrationStrategies.THROW`\
    When trying to bind a key or scope that is already bound an exception will be thrown (default behavior)
-* `RegistrationPolicy.REPLACE`\
+* `RegistrationStrategies.REPLACE`\
    When trying to bind a key or scope that is already bound the previous one will be replaced by a new one
    
 You can create your own registration strategy by implementing the `RegistrationStrategy` interface:
 ```java
 public class LoggingReplacingRegistrationStrategy implements RegistrationStrategy {
-    private RegistrationStrategy replacingStrategy = RegistrationReplacingStrategy.create();
+    private RegistrationStrategy replacingStrategy = RegistrationStrategies.THROW;
     private Logger LOG = ...
 
     @Override

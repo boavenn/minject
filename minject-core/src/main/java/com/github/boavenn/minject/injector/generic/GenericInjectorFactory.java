@@ -17,15 +17,15 @@ import java.util.*;
 
 @NoArgsConstructor(staticName = "empty")
 public class GenericInjectorFactory {
-    private static final RegistrationPolicy DEFAULT_BINDING_REGISTRATION_POLICY = RegistrationPolicy.THROW;
-    private static final RegistrationPolicy DEFAULT_SCOPE_REGISTRATION_POLICY = RegistrationPolicy.THROW;
+    private static final RegistrationStrategies DEFAULT_BINDING_REGISTRATION_STRATEGY = RegistrationStrategies.THROW;
+    private static final RegistrationStrategies DEFAULT_SCOPE_REGISTRATION_STRATEGY = RegistrationStrategies.THROW;
     private static final List<ModuleProcessor> DEFAULT_MODULE_PROCESSORS = List.of(new GenericModuleProcessor());
 
     private final Set<Module> initialModules = new HashSet<>();
     private final List<ModuleProcessor> moduleProcessors = new LinkedList<>();
 
-    private RegistrationStrategy bindingRegistrationStrategy = DEFAULT_BINDING_REGISTRATION_POLICY.getStrategy();
-    private RegistrationStrategy scopeRegistrationStrategy = DEFAULT_SCOPE_REGISTRATION_POLICY.getStrategy();
+    private RegistrationStrategy bindingRegistrationStrategy = DEFAULT_BINDING_REGISTRATION_STRATEGY;
+    private RegistrationStrategy scopeRegistrationStrategy = DEFAULT_SCOPE_REGISTRATION_STRATEGY;
 
     public static GenericInjectorFactory withDefaults() {
         return GenericInjectorFactory.empty()
@@ -42,21 +42,13 @@ public class GenericInjectorFactory {
         return this;
     }
 
-    public GenericInjectorFactory setBindingRegistrationPolicy(RegistrationPolicy registrationPolicy) {
-        return setBindingRegistrationPolicy(registrationPolicy.getStrategy());
-    }
-
-    public GenericInjectorFactory setBindingRegistrationPolicy(RegistrationStrategy registrationStrategy) {
-        this.bindingRegistrationStrategy = registrationStrategy;
+    public GenericInjectorFactory setBindingRegistrationStrategy(RegistrationStrategy strategy) {
+        this.bindingRegistrationStrategy = strategy;
         return this;
     }
 
-    public GenericInjectorFactory setScopeRegistrationPolicy(RegistrationPolicy registrationPolicy) {
-        return setScopeRegistrationPolicy(registrationPolicy.getStrategy());
-    }
-
-    public GenericInjectorFactory setScopeRegistrationPolicy(RegistrationStrategy registrationStrategy) {
-        this.scopeRegistrationStrategy = registrationStrategy;
+    public GenericInjectorFactory setScopeRegistrationStrategy(RegistrationStrategy strategy) {
+        this.scopeRegistrationStrategy = strategy;
         return this;
     }
 

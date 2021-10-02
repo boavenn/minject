@@ -3,7 +3,7 @@ package com.github.boavenn.minject.configuration.generic
 import com.github.boavenn.minject.ClassKey
 import com.github.boavenn.minject.binding.BindingRegistry
 import com.github.boavenn.minject.configuration.Module
-import com.github.boavenn.minject.configuration.RegistrationPolicy
+import com.github.boavenn.minject.configuration.RegistrationStrategies
 import com.github.boavenn.minject.exceptions.BindingException
 import com.github.boavenn.minject.scope.ScopeRegistry
 import com.github.boavenn.minject.scope.Unscoped
@@ -15,8 +15,8 @@ class GenericBinderSpec extends Specification {
     def scopeRegistry = Mock(ScopeRegistry)
 
     def sampleKeyName = "sampleName"
-    def throwingStrategy = RegistrationPolicy.THROW.getStrategy()
-    def replacingStrategy = RegistrationPolicy.REPLACE.getStrategy()
+    def throwingStrategy = RegistrationStrategies.THROW
+    def replacingStrategy = RegistrationStrategies.REPLACE
 
     def "bind() WHEN given a class key which is not registered SHOULD call binding registry"() {
         given:

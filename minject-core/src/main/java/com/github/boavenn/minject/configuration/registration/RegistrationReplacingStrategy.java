@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 @NoArgsConstructor(staticName = "create")
 public class RegistrationReplacingStrategy implements RegistrationStrategy {
     @Override
-    public <T> T register(Supplier<T> registrationCallback, boolean alreadyExists, String objRepresentation) {
+    public <T> T register(Supplier<T> registrationCallback, boolean exists, String key) {
         return registrationCallback.get();
     }
 }
