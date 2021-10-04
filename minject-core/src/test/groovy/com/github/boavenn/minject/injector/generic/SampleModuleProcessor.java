@@ -7,7 +7,7 @@ import com.github.boavenn.minject.injector.Injector;
 import lombok.Getter;
 
 @Getter
-public class SampleModuleProcessor implements ModuleProcessor {
+class SampleModuleProcessor implements ModuleProcessor {
     private int processedModulesCounter = 0;
 
     @Override

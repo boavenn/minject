@@ -1,5 +1,6 @@
 package com.github.boavenn.minject.binding.generic;
 
+import com.github.boavenn.minject.scope.EagerSingleton;
 import com.github.boavenn.minject.scope.Unscoped;
 import com.github.boavenn.minject.binding.Binding;
 import com.github.boavenn.minject.binding.BindingScopeBuilder;
@@ -25,5 +26,10 @@ public class GenericBindingScopeBuilder<T> implements BindingScopeBuilder {
     @Override
     public void unscoped() {
         in(Unscoped.class);
+    }
+
+    @Override
+    public void asEagerSingleton() {
+        in(EagerSingleton.class);
     }
 }

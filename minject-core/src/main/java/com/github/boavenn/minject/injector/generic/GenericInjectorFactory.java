@@ -1,11 +1,13 @@
 package com.github.boavenn.minject.injector.generic;
 
+import com.github.boavenn.minject.binding.Binding;
 import com.github.boavenn.minject.binding.BindingRegistry;
 import com.github.boavenn.minject.configuration.Module;
 import com.github.boavenn.minject.configuration.*;
 import com.github.boavenn.minject.configuration.generic.GenericBinder;
 import com.github.boavenn.minject.configuration.generic.GenericModuleProcessor;
 import com.github.boavenn.minject.injector.Injector;
+import com.github.boavenn.minject.scope.EagerSingleton;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.Unscoped;
 import com.github.boavenn.minject.scope.generic.SingletonScopeHandler;
@@ -13,6 +15,7 @@ import com.github.boavenn.minject.scope.generic.UnscopedScopeHandler;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Singleton;
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 @NoArgsConstructor(staticName = "empty")
@@ -70,6 +73,8 @@ public class GenericInjectorFactory {
         var installedModules = binder.getInstalledModules();
         processModules(installedModules, binder, injector);
 
+        initializeEagerSingletons(bindingRegistry, injector);
+
         return injector;
     }
 
@@ -80,7 +85,10 @@ public class GenericInjectorFactory {
 
     private void registerDefaultScopes(ScopeRegistry scopeRegistry) {
         scopeRegistry.registerScope(Unscoped.class, UnscopedScopeHandler.empty());
-        scopeRegistry.registerScope(Singleton.class, SingletonScopeHandler.empty());
+
+        var singletonScopeHandler = SingletonScopeHandler.empty();
+        scopeRegistry.registerScope(Singleton.class, singletonScopeHandler);
+        scopeRegistry.registerScope(EagerSingleton.class, singletonScopeHandler);
     }
 
     private void configureModules(GenericBinder binder) {
@@ -91,5 +99,17 @@ public class GenericInjectorFactory {
         for (var moduleProcessor : moduleProcessors) {
             modules.forEach(module -> moduleProcessor.process(module, binder, injector));
         }
+    }
+
+    private void initializeEagerSingletons(BindingRegistry bindingRegistry, Injector injector) {
+        Collection<? extends Binding<?>> bindings = bindingRegistry.getBindingData().values();
+        bindings.stream()
+                .filter(this::isEagerSingleton)
+                .map(Binding::getClassKey)
+                .forEach(injector::getInstanceOf);
+    }
+
+    private boolean isEagerSingleton(Binding<?> binding) {
+        return binding.getScope().equals(EagerSingleton.class);
     }
 }

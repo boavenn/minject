@@ -81,4 +81,22 @@ class GenericInjectorFactorySpec extends Specification {
         then:
         sampleModuleProcessor.getProcessedModulesCounter() == 2
     }
+
+    def "create() WHEN eager singletons are registered SHOULD initialize them before returning injector"() {
+        given:
+        def sampleModule = new EagerSingletonModule()
+        def explicitConfigurationClassKey = ClassKey.of(UnqualifiedUnscopedClass, EagerSingletonModule.className)
+        def providerMethodClassKey = ClassKey.of(UnqualifiedSingletonClass, EagerSingletonModule.providedClassName)
+
+        when:
+        def injector = GenericInjectorFactory.withDefaults()
+                                             .addModules([sampleModule])
+                                             .create()
+
+        then:
+        sampleModule.isConfigurationProviderCalled()
+        sampleModule.isProviderMethodCalled()
+        injector.getInstanceOf(explicitConfigurationClassKey) === injector.getInstanceOf(explicitConfigurationClassKey)
+        injector.getInstanceOf(providerMethodClassKey) === injector.getInstanceOf(providerMethodClassKey)
+    }
 }

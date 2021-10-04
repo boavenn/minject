@@ -52,4 +52,9 @@ public class GenericBindingRegistry implements BindingRegistry {
     public <T> void registerBinding(Binding<T> binding) {
         bindings.put(binding.getClassKey(), binding);
     }
+
+    @Override
+    public Map<ClassKey<?>, ? extends Binding<?>> getBindingData() {
+        return Map.copyOf(bindings);
+    }
 }

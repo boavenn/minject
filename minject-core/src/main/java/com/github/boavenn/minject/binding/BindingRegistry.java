@@ -2,6 +2,7 @@ package com.github.boavenn.minject.binding;
 
 import com.github.boavenn.minject.ClassKey;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface BindingRegistry {
@@ -12,4 +13,5 @@ public interface BindingRegistry {
     <T> boolean isRegistered(ClassKey<T> classKey);
     <T> boolean isRegistered(Class<T> cls);
     <T> void registerBinding(Binding<T> binding);
+    Map<ClassKey<?>, ? extends Binding<?>> getBindingData();
 }
