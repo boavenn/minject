@@ -145,7 +145,7 @@ It will only be injected by an injector if you annotate a field or method parame
 ```java
 public class MyClass {
     @Inject @Empty
-    private SomeClass secret;
+    private SomeClass someClass;
     
     // ...
 }
