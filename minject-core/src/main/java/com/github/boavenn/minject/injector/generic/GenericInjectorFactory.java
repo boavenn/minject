@@ -15,7 +15,6 @@ import com.github.boavenn.minject.scope.generic.UnscopedScopeHandler;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Singleton;
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 @NoArgsConstructor(staticName = "empty")

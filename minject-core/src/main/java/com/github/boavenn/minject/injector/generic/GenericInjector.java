@@ -8,14 +8,12 @@ import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.scope.ScopeHandler;
 import com.github.boavenn.minject.scope.ScopeRegistry;
 import com.github.boavenn.minject.scope.Unscoped;
+import com.github.boavenn.minject.utils.ReflectionUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 
 import javax.inject.Provider;
-import javax.inject.Scope;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Getter(AccessLevel.PACKAGE)
@@ -52,7 +50,7 @@ public class GenericInjector implements Injector {
     public <T> Provider<T> getProviderOf(ClassKey<T> classKey) {
         if (eligibleForImplicitBinding(classKey)) {
             var rawType = (Class<T>) classKey.getRawType();
-            var scope = getScopeOf(rawType).orElse(Unscoped.class);
+            var scope = ReflectionUtils.findScopeOn(rawType).orElse(Unscoped.class);
             bindingRegistry.bind(classKey)
                            .to(rawType)
                            .in(scope);
@@ -71,14 +69,6 @@ public class GenericInjector implements Injector {
 
     private boolean eligibleForImplicitBinding(ClassKey<?> classKey) {
         return !bindingRegistry.isRegistered(classKey) && !classKey.isQualified() && !classKey.isParameterized();
-    }
-
-    private Optional<Class<? extends Annotation>> getScopeOf(Class<?> cls) {
-        var annotations = cls.getDeclaredAnnotations();
-        return Arrays.stream(annotations)
-                     .filter(annotation -> annotation.annotationType().isAnnotationPresent(Scope.class))
-                     .findFirst()
-                     .map(Annotation::annotationType);
     }
 
     private <T> Binding<T> getBindingFor(ClassKey<T> classKey) {

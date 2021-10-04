@@ -8,15 +8,14 @@ import com.github.boavenn.minject.configuration.Provides;
 import com.github.boavenn.minject.exceptions.InjectionException;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.scope.Unscoped;
+import com.github.boavenn.minject.utils.ReflectionUtils;
 
 import javax.inject.Provider;
-import javax.inject.Scope;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class GenericModuleProcessor implements ModuleProcessor {
     @Override
@@ -26,7 +25,7 @@ public class GenericModuleProcessor implements ModuleProcessor {
             if (!isConfigurationMethod(method) && isProvidingMethod(method)) {
                 var returnTypeClassKey = ClassKey.from(method);
                 var paramKeys = identifyParamsOf(method);
-                var scope = findScopeOn(method).orElse(Unscoped.class);
+                var scope = ReflectionUtils.findScopeOn(method).orElse(Unscoped.class);
 
                 binder.bind(returnTypeClassKey)
                       .toProvider(createProviderFor(method, paramKeys, module, injector))
@@ -45,14 +44,6 @@ public class GenericModuleProcessor implements ModuleProcessor {
         return Arrays.stream(method.getDeclaredAnnotations())
                 .map(Annotation::annotationType)
                 .anyMatch(annotationType -> annotationType.equals(Provides.class));
-    }
-
-    private Optional<Class<? extends Annotation>> findScopeOn(Method method) {
-        var annotations = method.getDeclaredAnnotations();
-        return Arrays.stream(annotations)
-                     .filter(annotation -> annotation.annotationType().isAnnotationPresent(Scope.class))
-                     .findFirst()
-                     .map(Annotation::annotationType);
     }
 
     private List<? extends ClassKey<?>> identifyParamsOf(Executable executable) {
