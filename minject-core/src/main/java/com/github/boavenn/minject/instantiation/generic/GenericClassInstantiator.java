@@ -1,14 +1,16 @@
 package com.github.boavenn.minject.instantiation.generic;
 
-import com.github.boavenn.minject.exceptions.InjectionException;
-import com.github.boavenn.minject.instantiation.*;
-import com.github.boavenn.minject.utils.Types;
 import com.github.boavenn.minject.ClassKey;
+import com.github.boavenn.minject.exceptions.InjectionException;
 import com.github.boavenn.minject.injector.Injector;
+import com.github.boavenn.minject.instantiation.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -136,9 +138,7 @@ public class GenericClassInstantiator implements ClassInstantiator {
 
     private Object resolveKey(ClassKey<?> classKey) {
         if (classKey.isProviderKey()) {
-            var nestedTypeLiterals = Types.getTypeLiteralsOfNestedTypesIn(classKey.getTypeLiteral());
-            var typeToProvide = nestedTypeLiterals.get(0);
-            return injector.getProviderOf(classKey.with(typeToProvide));
+            return injector.getProviderOf(classKey.toProvidedTypeKey());
         }
         return injector.getInstanceOf(classKey);
     }

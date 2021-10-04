@@ -1,7 +1,7 @@
 package com.github.boavenn.minject
 
 
-import com.github.boavenn.minject.exceptions.ClassKeyCreationException
+import com.github.boavenn.minject.exceptions.ClassKeyException
 import spock.lang.Specification
 
 import javax.inject.Named
@@ -223,8 +223,8 @@ class ClassKeySpec extends Specification {
         ClassKey.from(method)
 
         then:
-        ClassKeyCreationException ex = thrown()
-        ex.getMessage() == ClassKeyCreationException.methodOfVoidReturnType().getMessage()
+        ClassKeyException ex = thrown()
+        ex.getMessage() == ClassKeyException.methodOfVoidReturnType().getMessage()
     }
 
     def "from() WHEN given method with named qualifier SHOULD return correct key"() {
@@ -424,6 +424,30 @@ class ClassKeySpec extends Specification {
         keyTypeLiteral == expectedTypeLiteral
         expectedTypeLiteral == keyTypeLiteral
         keyTypeLiteral.hashCode() == expectedTypeLiteral.hashCode()
+    }
+
+    def "toProvidedTypeKey() WHEN class key of provider type SHOULD return class key of provided type"() {
+        given:
+        def key = ClassKey.of(new TypeLiteral<Provider<String>>() {})
+
+        when:
+        def providedTypeKey = key.toProvidedTypeKey()
+
+        then:
+        providedTypeKey.getTypeLiteral() == new TypeLiteral<String>() {}
+        providedTypeKey.getRawType() == String
+    }
+
+    def "toProvidedTypeKey() WHEN class key is not of provider type SHOULD throw an exception"() {
+        given:
+        def key = ClassKey.of(String)
+
+        when:
+        key.toProvidedTypeKey()
+
+        then:
+        ClassKeyException ex = thrown()
+        ex.getMessage() == ClassKeyException.nonProviderKey().getMessage()
     }
 
     def "with() WHEN given new type literal SHOULD return same key but with new type literal"() {

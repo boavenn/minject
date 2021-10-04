@@ -8,7 +8,6 @@ import com.github.boavenn.minject.configuration.Provides;
 import com.github.boavenn.minject.exceptions.InjectionException;
 import com.github.boavenn.minject.injector.Injector;
 import com.github.boavenn.minject.scope.Unscoped;
-import com.github.boavenn.minject.utils.Types;
 
 import javax.inject.Provider;
 import javax.inject.Scope;
@@ -85,9 +84,7 @@ public class GenericModuleProcessor implements ModuleProcessor {
 
     private Object resolveKey(ClassKey<?> classKey, Injector injector) {
         if (classKey.isProviderKey()) {
-            var nestedTypeLiterals = Types.getTypeLiteralsOfNestedTypesIn(classKey.getTypeLiteral());
-            var typeToProvide = nestedTypeLiterals.get(0);
-            return injector.getProviderOf(classKey.with(typeToProvide));
+            return injector.getProviderOf(classKey.toProvidedTypeKey());
         }
         return injector.getInstanceOf(classKey);
     }

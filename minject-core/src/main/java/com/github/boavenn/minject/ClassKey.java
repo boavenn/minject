@@ -1,6 +1,7 @@
 package com.github.boavenn.minject;
 
-import com.github.boavenn.minject.exceptions.ClassKeyCreationException;
+import com.github.boavenn.minject.exceptions.ClassKeyException;
+import com.github.boavenn.minject.utils.Types;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -65,7 +66,7 @@ public class ClassKey<T> {
         var returnType = method.getGenericReturnType();
 
         if (returnType.equals(Void.TYPE)) {
-            throw ClassKeyCreationException.methodOfVoidReturnType();
+            throw ClassKeyException.methodOfVoidReturnType();
         }
 
         return from(returnType, method);
@@ -109,5 +110,15 @@ public class ClassKey<T> {
 
     public <U> ClassKey<U> with(TypeLiteral<U> newTypeLiteral) {
         return new ClassKey<>(newTypeLiteral, name, qualifier);
+    }
+
+    public ClassKey<?> toProvidedTypeKey() {
+        if (!isProviderKey()) {
+            throw ClassKeyException.nonProviderKey();
+        }
+
+        var nestedTypeLiterals = Types.getTypeLiteralsOfNestedTypesIn(typeLiteral);
+        var typeToProvide = nestedTypeLiterals.get(0);
+        return with(typeToProvide);
     }
 }
