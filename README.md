@@ -101,12 +101,12 @@ class MyModule implements Module {
           
         // Binds key <@Named("empty"), SomeClass> to value returned from provider
         binder.bind(ClassKey.of(SomeClass.class, "empty"))
-              .toProvider(() -> new SomeClass(1, 2, 3))
+              .toProvider(() -> new SomeClass(new LinkedList<>()))
               .unscoped();
     }
 }
 ```
-In the above example, the only qualifiers I've used are names, but you're able to create your own qualifier by creating an annotation that has `@Qualifier` meta-annotation on top of it. For instance:
+In the above example, the only qualifiers I've used are names, but you're able to create your own qualifier by creating an annotation that has `@Qualifier` meta-annotation on top of it:
 
 ```java
 @Qualifier
@@ -121,18 +121,20 @@ And if you bind your class like this:
 
 ```java
 class MyModule implements Module {
-    // Unfortunately, the only way to get an instance of your annotation is to get it via reflection.
-    // To do that, we're creating a field that will have all qualifier annotations used by us on top of it.
+    // Unfortunately, the only way to get an instance of your annotation is to 
+    // get it via reflection. To do that, we're creating a field that will have
+    // all qualifier annotations used by us on top of it.
     @Empty 
     private int qualifiers;
 
     @Override
     public void configure(Binder binder) {
-        Annotation emptyQualifier = MyModule.class.getDeclaredField("qualifiers").getAnnotation(Empty.class);
+        Annotation emptyQualifier = MyModule.class.getDeclaredField("qualifiers")
+						  .getAnnotation(Empty.class);
         
         // Binds key <@Empty, SomeClass> to value returned from provider
         binder.bind(ClassKey.of(SomeClass.class, emptyQualifier))
-              .toProvider(() -> new SomeClass(1, 2, 3))
+              .toProvider(() -> new SomeClass(new LinkedList<>()))
               .unscoped();
     }
 }
@@ -215,9 +217,11 @@ class MyModule implements Module {
 ```
 
 ### Scopes
-By default, two scopes are known to the injector:
+By default, 3 scopes are known to the injector:
 * Singleton (`@Singleton`)\
-    Dependencies that are singleton scoped are created only once during the whole lifetime of an injector. That is, whenever the injector needs to inject a singleton scoped instance of type `<T>` it does so using the same object (that's either created by the injector or supplied via `bind(...).toInstance(...)` binder method. 
+    Dependencies that are singleton scoped are created only once during the whole lifetime of an injector. That is, whenever the injector needs to inject a singleton scoped instance of type `<T>` it does so using the same object (that's either created by the injector or supplied via `bind(...).toInstance(...)` binder method.
+* Eager singleton (`@EagerSingleton`)\
+    Same as singleton scope, except eager singletons are instantiated at injector creation.
 * Default scope (`@Unscoped`)\
     Dependencies with default scope are basically the opposite of singleton objects. Every time an unscoped instance of type `<T>` is requested injector creates a new instance. If you don't annotate your class with any other scope annotation, this is the scope it will get.
 
@@ -293,15 +297,15 @@ By default, Minject has two registration strategies available:
 You can create your own registration strategy by implementing the `RegistrationStrategy` interface:
 ```java
 public class LoggingReplacingRegistrationStrategy implements RegistrationStrategy {
-    private RegistrationStrategy replacingStrategy = RegistrationStrategies.THROW;
+    private RegistrationStrategy replacingStrategy = RegistrationStrategies.REPLACE;
     private Logger LOG = ...
 
     @Override
-    public <T> T register(Supplier<T> registrationCallback, boolean alreadyExists, String objRepresentation) {
-        if (alreadyExists) {
-            LOG.info("Replaced binding for " + objRepresentation);
+    public <T> T register(Supplier<T> registrationCallback, boolean exists, String key) {
+        if (exists) {
+            LOG.info("Replaced binding for " + key);
         }
-        return replacingStrategy.register(registrationCallback, alreadyExists, objRepresentation);
+        return replacingStrategy.register(registrationCallback, exists, key);
     }
 }
 ```
