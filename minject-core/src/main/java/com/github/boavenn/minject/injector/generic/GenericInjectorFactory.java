@@ -96,7 +96,9 @@ public class GenericInjectorFactory {
 
     private void processModules(Iterable<Module> modules, Binder binder, Injector injector) {
         for (var moduleProcessor : moduleProcessors) {
+            moduleProcessor.before(binder, injector);
             modules.forEach(module -> moduleProcessor.process(module, binder, injector));
+            moduleProcessor.after(binder, injector);
         }
     }
 

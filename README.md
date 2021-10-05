@@ -15,8 +15,8 @@ public static void main(String[] args) {
 }
 ```
 
-### Injection
-To mark a member of the class or its constructor as an injection point simply annotate it with `@Inject` annotation. As of JSR-330 standard, three types of injection are supported:
+### Dependency injection
+To mark a member of the class or its constructor as an injection point simply annotate it with `@Inject` annotation. As of JSR-330 standard, three types of dependency injection are supported:
 * **Constructor injection**
 	```java
 	public class MyClass {
@@ -274,17 +274,28 @@ public static void main(String[] args) {
 You can create your own module processor by implementing the `ModuleProcessor` interface:
 
 ```java
-public class MyModuleProcessor implements ModuleProcessor {
-    private int installedModulesCounter = 0;
+public class ModuleCounter implements ModuleProcessor {
+    private static final Logger LOG = ...
+    private int installedModulesCounter;
+    
+    @Override
+    public void before(Binder binder, Injector injector) {
+        installedModulesCounter = 0;
+    }
 
     @Override
     public void process(Module module, Binder binder, Injector injector) {
         installedModulesCounter++;
     }
+
+    @Override
+    public void after(Binder binder, Injector injector) {
+        LOG.info("Number of modules installed: " + installedModulesCounter);
+    }
 }
 ```
 
-> Note: Check `GenericModuleProcessor` class to see how more real-world module processors may look like
+> Note: Check `GenericModuleProcessor` class to see how a real-world module processors may look like
 
 #### Registration strategies
 
@@ -297,8 +308,8 @@ By default, Minject has two registration strategies available:
 You can create your own registration strategy by implementing the `RegistrationStrategy` interface:
 ```java
 public class LoggingReplacingRegistrationStrategy implements RegistrationStrategy {
+    private static final Logger LOG = ...
     private RegistrationStrategy replacingStrategy = RegistrationStrategies.REPLACE;
-    private Logger LOG = ...
 
     @Override
     public <T> T register(Supplier<T> registrationCallback, boolean exists, String key) {

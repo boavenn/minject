@@ -19,6 +19,11 @@ import java.util.List;
 
 public class GenericModuleProcessor implements ModuleProcessor {
     @Override
+    public void before(Binder binder, Injector injector) {
+
+    }
+
+    @Override
     public void process(Module module, Binder binder, Injector injector) {
         var moduleClass = module.getClass();
         for (var method : moduleClass.getDeclaredMethods()) {
@@ -78,5 +83,10 @@ public class GenericModuleProcessor implements ModuleProcessor {
             return injector.getProviderOf(classKey.toProvidedTypeKey());
         }
         return injector.getInstanceOf(classKey);
+    }
+
+    @Override
+    public void after(Binder binder, Injector injector) {
+
     }
 }
