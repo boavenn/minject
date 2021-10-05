@@ -2,10 +2,7 @@ package com.github.boavenn.minject;
 
 import com.github.boavenn.minject.exceptions.ClassKeyException;
 import com.github.boavenn.minject.utils.Types;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -17,6 +14,7 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(cacheStrategy = EqualsAndHashCode.CacheStrategy.LAZY)
+@ToString
 public class ClassKey<T> {
     private final TypeLiteral<T> typeLiteral;
     private final String name;

@@ -2,10 +2,7 @@ package com.github.boavenn.minject;
 
 import com.github.boavenn.minject.exceptions.TypeException;
 import com.github.boavenn.minject.utils.Types;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.inject.Provider;
 import java.lang.reflect.ParameterizedType;
@@ -16,8 +13,10 @@ import java.util.Objects;
 
 @Getter
 @EqualsAndHashCode(cacheStrategy = EqualsAndHashCode.CacheStrategy.LAZY)
+@ToString
 public class TypeLiteral<T> {
     private final Class<T> rawType;
+    @ToString.Exclude
     private final Type type;
 
     @SuppressWarnings("unchecked")
