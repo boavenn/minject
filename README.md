@@ -1,5 +1,7 @@
 # Minject
 
+**Latest release: [0.1.0](https://github.com/boavenn/minject/releases/tag/v0.1.0)**
+
 In short, Minject is a simple dependency injection library for Java inspired by frameworks like [Guice](https://github.com/google/guice) or [Spring](https://github.com/spring-projects/spring-framework) with full support for the [JSR-330](https://docs.oracle.com/javaee/7/api/javax/inject/package-summary.html) standard.
 
 > It was supposed to be a simple practice project at first so I could learn java reflection the hard way, but somehow, I ended up reading the whole [book](https://www.amazon.com/Dependency-Injection-Design-patterns-Spring-ebook/dp/B0977ZS7P8) about dependency injection and inspecting how the whole concept was implemented by the frameworks mentioned above. And then, with that knowledge in mind, I decided to create such a library on my own. I was heavily inspired by Guice though, so a lot of mechanisms are very similar if not identical to those provided by Guice (especially the `TypeLiteral<T>` class).
@@ -295,7 +297,7 @@ public class ModuleCounter implements ModuleProcessor {
 }
 ```
 
-> Note: Check `GenericModuleProcessor` class to see how a real-world module processors may look like
+> Note: Check [`GenericModuleProcessor`](https://github.com/boavenn/minject/blob/main/minject-core/src/main/java/com/github/boavenn/minject/configuration/generic/GenericModuleProcessor.java) class to see how a real-world module processors may look like
 
 #### Registration strategies
 
